@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://bximc25pt8o88"]
+
+[node name="Interaction" type="Area2D"]
+collision_layer = 2
