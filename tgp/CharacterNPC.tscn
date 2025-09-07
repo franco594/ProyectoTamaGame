@@ -1,7 +1,7 @@
 [gd_scene load_steps=37 format=3 uid="uid://cwbp4rrjua33k"]
 
-[ext_resource type="Texture2D" uid="uid://flwq66lfdda0" path="res://Resources/TileSetMimiSprite.png" id="1_s2kpd"]
-[ext_resource type="Texture2D" uid="uid://dyfjasn162kt6" path="res://Resources/TileSetMimiSprite2.png" id="2_ewt57"]
+[ext_resource type="Texture2D" uid="uid://flwq66lfdda0" path="res://Resources/Personaje/TileSetMimiSprite.png" id="1_s2kpd"]
+[ext_resource type="Texture2D" uid="uid://dyfjasn162kt6" path="res://Resources/Personaje/TileSetMimiSprite2.png" id="2_ewt57"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ewt57"]
 atlas = ExtResource("1_s2kpd")
@@ -291,5 +291,4 @@ animations = [{
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_vd2m3")
-animation = &"Mood 5"
-frame_progress = 0.0523394
+animation = &"Idle"
