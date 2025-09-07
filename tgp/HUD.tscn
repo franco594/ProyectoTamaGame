@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://cd5brqxmccilg"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Control" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="CanvasLayer" parent="Control"]
+
+[node name="Panel" type="CanvasLayer" parent="Control/MarginContainer"]
+
+[node name="HBoxContainer" type="CanvasLayer" parent="Control/MarginContainer/Panel"]
+
+[node name="TextureRect" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer"]
+
+[node name="VBoxContainer" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer"]
+
+[node name="HBoxContainer" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer"]
+
+[node name="LabelVida" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer"]
+
+[node name="TextureProgresBar" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer"]
+
+[node name="HBoxContainer2" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer"]
+
+[node name="LabelEnergia" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer2"]
+
+[node name="TextureProgresBar" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer2"]
+
+[node name="HBoxContainer3" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer"]
+
+[node name="LabelHambre" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer3"]
+
+[node name="TextureProgresBar" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer3"]
+
+[node name="HBoxContainer" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer3"]
+
+[node name="Label" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer3/HBoxContainer"]
+
+[node name="TextureProgresBar" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer3/HBoxContainer"]
