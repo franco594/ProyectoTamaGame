@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cwbp4rrjua33k"]
+[gd_scene load_steps=28 format=3 uid="uid://cwbp4rrjua33k"]
 
 [ext_resource type="Texture2D" uid="uid://flwq66lfdda0" path="res://Resources/TileSetMimiSprite.png" id="1_s2kpd"]
 
@@ -62,6 +62,14 @@ region = Rect2(0, 64, 32, 64)
 atlas = ExtResource("1_s2kpd")
 region = Rect2(0, 0, 32, 64)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_58tev"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(256, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_32hsf"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(256, 64, 32, 64)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_s2kpd"]
 atlas = ExtResource("1_s2kpd")
 region = Rect2(128, 0, 32, 64)
@@ -69,6 +77,30 @@ region = Rect2(128, 0, 32, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_vd2m3"]
 atlas = ExtResource("1_s2kpd")
 region = Rect2(160, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tg0au"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(192, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_66of1"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(224, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sgp83"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(128, 64, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gjwm1"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(160, 64, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xcjb2"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(192, 64, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s5kuk"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(224, 64, 32, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vd2m3"]
 animations = [{
@@ -124,6 +156,17 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_58tev")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_32hsf")
+}],
+"loop": true,
+"name": &"Mood 1",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_s2kpd")
 }, {
 "duration": 1.0,
@@ -132,10 +175,44 @@ animations = [{
 "loop": true,
 "name": &"Walk 1",
 "speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tg0au")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_66of1")
+}],
+"loop": true,
+"name": &"Walk 2",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sgp83")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gjwm1")
+}],
+"loop": true,
+"name": &"Walk 3",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xcjb2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s5kuk")
+}],
+"loop": true,
+"name": &"Walk 4",
+"speed": 3.0
 }]
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_vd2m3")
-animation = &"Walk 1"
+animation = &"Mood 1"
+frame_progress = 0.0785413
