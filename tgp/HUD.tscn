@@ -1,8 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://cd5brqxmccilg"]
+[gd_scene load_steps=6 format=3 uid="uid://cd5brqxmccilg"]
 
 [ext_resource type="Texture2D" uid="uid://bkf5pvvtwdwqa" path="res://ProfilePicture (1).PNG" id="1_k5de2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efote"]
+
+[sub_resource type="Theme" id="Theme_k5de2"]
+
+[sub_resource type="Theme" id="Theme_efote"]
+
+[sub_resource type="FontFile" id="FontFile_vow1y"]
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
@@ -27,44 +38,38 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_efote")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/MarginContainer/Panel"]
 layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
 
 [node name="TextureRect" type="TextureRect" parent="Control/MarginContainer/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 texture = ExtResource("1_k5de2")
 stretch_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer/Panel/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer/Panel"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+offset_left = 18.0
+offset_top = 134.0
+offset_right = 118.0
+offset_bottom = 262.0
+theme = SubResource("Theme_k5de2")
+theme_override_constants/separation = 12
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="Control/MarginContainer/Panel/VBoxContainer"]
 layout_mode = 2
+theme = SubResource("Theme_efote")
 
-[node name="LabelVida" type="Label" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/MarginContainer/Panel/VBoxContainer/PanelContainer"]
 layout_mode = 2
+theme_override_fonts/normal_font = SubResource("FontFile_vow1y")
+text = "HOLAAAA!!
 
-[node name="TextureProgresBar" type="TextureProgressBar" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="HBoxContainer2" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer"]
-
-[node name="LabelEnergia" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer2"]
-
-[node name="TextureProgresBar" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer2"]
-
-[node name="HBoxContainer3" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer"]
-
-[node name="LabelHambre" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer3"]
-
-[node name="TextureProgresBar" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer3"]
-
-[node name="HBoxContainer4" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer"]
-
-[node name="Label" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer4"]
-
-[node name="TextureProgresBar" type="CanvasLayer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/HBoxContainer4"]
-
-[node name="PanelContainer" type="PanelContainer" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Control/MarginContainer/Panel/HBoxContainer/VBoxContainer/PanelContainer"]
-layout_mode = 2
+SD
+SDS
+DS
+DS
+DS"
+fit_content = true
+scroll_active = false
