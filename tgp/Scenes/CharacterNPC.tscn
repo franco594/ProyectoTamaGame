@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cwbp4rrjua33k"]
+[gd_scene load_steps=21 format=3 uid="uid://cwbp4rrjua33k"]
 
 [ext_resource type="Script" uid="uid://beuto5n1frgnt" path="res://Scripts/character_npc.gd" id="1_luumf"]
 [ext_resource type="Texture2D" uid="uid://flwq66lfdda0" path="res://Resources/Personaje/TileSetMimiSprite.png" id="1_s2kpd"]
@@ -18,6 +18,54 @@ region = Rect2(64, 64, 32, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_f1nrn"]
 atlas = ExtResource("1_s2kpd")
 region = Rect2(96, 64, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yswcl"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(64, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dwniw"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(96, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sulte"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(32, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vdb46"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(0, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b2py8"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(128, 64, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yeuaq"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(160, 64, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hplck"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(192, 64, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jckj4"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(224, 64, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ll8hm"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(192, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oyo7v"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(224, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yai5x"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(128, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hx4oi"]
+atlas = ExtResource("1_s2kpd")
+region = Rect2(160, 0, 32, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_yswcl"]
 resource_local_to_scene = true
@@ -39,20 +87,102 @@ animations = [{
 "loop": true,
 "name": &"Idle",
 "speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yswcl")
+}],
+"loop": true,
+"name": &"idle_NE",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dwniw")
+}],
+"loop": true,
+"name": &"idle_NW",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sulte")
+}],
+"loop": true,
+"name": &"idle_SE",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vdb46")
+}],
+"loop": true,
+"name": &"idle_SW",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b2py8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yeuaq")
+}],
+"loop": true,
+"name": &"walk_NE",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hplck")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jckj4")
+}],
+"loop": true,
+"name": &"walk_NW",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ll8hm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oyo7v")
+}],
+"loop": true,
+"name": &"walk_SE",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yai5x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hx4oi")
+}],
+"loop": true,
+"name": &"walk_SW",
+"speed": 2.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w72ig"]
 size = Vector2(13, 47)
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="NPC" type="CharacterBody2D"]
 script = ExtResource("1_luumf")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_yswcl")
-animation = &"Idle"
-frame_progress = 0.823147
+animation = &"walk_SW"
+frame_progress = 0.45794
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
 position = Vector2(0.5, 8.5)
 shape = SubResource("RectangleShape2D_w72ig")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 12.0
+target_desired_distance = 14.0
+path_max_distance = 2048.0
+avoidance_enabled = true
