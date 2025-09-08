@@ -650,5 +650,5 @@ tile_map_data = PackedByteArray("AAABAPv/AgACAAAAAAAAAPz/AwABAAAAAAAFAAAAAQACAAI
 tile_set = SubResource("TileSet_ao78g")
 
 [node name="Puertas" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAADAP//AAACAAAAABADAPn/AAACAAAAABA=")
+tile_map_data = PackedByteArray("AAAEAAAAAAAAAAAAABAEAPr/AAAAAAAAABACAAAAAAADAAEAABA=")
 tile_set = SubResource("TileSet_pwuno")
