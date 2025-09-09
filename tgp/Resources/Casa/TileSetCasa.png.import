@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dt5mu5og2o6r0"
-path="res://.godot/imported/TileSet2.png-209bd2002ceb67fe25e3ff27dfbfad80.ctex"
+uid="uid://dga547of087h6"
+path="res://.godot/imported/TileSetCasa.png-0a0f1cb69326ba6eb8ca689b72647a51.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Casa/TileSet2.png"
-dest_files=["res://.godot/imported/TileSet2.png-209bd2002ceb67fe25e3ff27dfbfad80.ctex"]
+source_file="res://Resources/Casa/TileSetCasa.png"
+dest_files=["res://.godot/imported/TileSetCasa.png-0a0f1cb69326ba6eb8ca689b72647a51.ctex"]
 
 [params]
 

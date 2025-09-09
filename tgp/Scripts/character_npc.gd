@@ -1,320 +1,233 @@
 extends CharacterBody2D
 
-# ===== Señales para la HUD =====
-signal hunger_changed(value: float)
-signal energy_changed(value: float)
-signal mood_changed(value: float)
-signal state_changed(new_state: String)
-
-# ===== Setup general =====
-@export var move_speed := 80.0
-@export var wander_radius := 280.0
-
-# Necesidades (0..100)
-@export var max_value := 100.0
-@export var hunger := 20.0
-@export var energy := 80.0
-@export var mood   := 80.0
-
-# Ritmos (por segundo)
-@export var hunger_rate := 2.0
-@export var energy_drain_walk := 3.0
-@export var energy_recover_sleep := 12.0
-@export var mood_drain_hungry := 2.0
-@export var mood_recover := 1.0
-
-# Umbrales
-@export var hungry_threshold := 65.0
-@export var tired_threshold  := 25.0
-
-# Cooldowns (segundos)
-@export var cd_after_eat := 10.0
-@export var cd_after_sleep := 12.0
-@export var cd_after_play := 8.0
-
-# ===== Nodos =====
-@onready var agent: NavigationAgent2D = $NavigationAgent2D
+# ================== REFERENCIAS ==================
+@export var tile_node: NodePath         # Asigná el TileMap o TileMapLayer del piso
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 
-# ===== Interno =====
-var _target := Vector2.ZERO
-var _time_to_new_target := 0.0
+# Pueden venir TileMap o TileMapLayer, soportamos ambos:
+var ground_tm: TileMap                  # si es TileMap
+var ground_layer: TileMapLayer          # si es TileMapLayer
 
-enum State {IDLE, WANDER, GO_TO_POI, USE_POI, SLEEP}
-var _state: State = State.WANDER
-var _poi_target: Node2D = null
-var _poi_kind: String = ""  # "food","bed","toy","toilet"
+# ================== MOVIMIENTO GRID ==================
+@export var tiles_per_second: float = 6.0     # velocidad: celdas por segundo
+@export var stop_epsilon: float = 1.0         # tolerancia al centro de la celda (px)
+@export var wander_every: float = 1.2         # cada cuánto intenta dar UN paso aleatorio (s)
 
-var _cooldowns := {"food": 0.0, "bed": 0.0, "toy": 0.0}
+var _path_world: PackedVector2Array = []      # centros de celdas en mundo
+var _path_cells: Array[Vector2i] = []         # path en celdas (map coords)
+var _current_target: Vector2 = Vector2.ZERO   # punto mundo de la celda objetivo
+var _wander_timer: float = 0.0
+var _moving: bool = false
+var _last_dir: String = "SE"                  # para idle
 
-# --- ISO anim helpers ---
-var _last_dir := "SE"
-const INV_SQRT2 := 0.7071067811865476
-const _DIRS = [
-	{"name":"NE", "v": Vector2( INV_SQRT2, -INV_SQRT2)},
-	{"name":"NW", "v": Vector2(-INV_SQRT2, -INV_SQRT2)},
-	{"name":"SE", "v": Vector2( INV_SQRT2,  INV_SQRT2)},
-	{"name":"SW", "v": Vector2(-INV_SQRT2,  INV_SQRT2)},
+# 4 vecinos (grilla iso/diamond)
+const DIRS4: Array[Vector2i] = [
+	Vector2i( 1,  0),  # NE
+	Vector2i(-1,  0),  # SW
+	Vector2i( 0,  1),  # SE
+	Vector2i( 0, -1),  # NW
 ]
 
-# Direcciones de movimiento “snap” a iso
-const ISO_DIRS: Array[Vector2] = [
-	Vector2(1, 1),
-	Vector2(-1, 1),
-	Vector2(1, -1),
-	Vector2(-1, -1),
-]
-
-# ====== NAV helpers (clamp a la NavigationRegion) ======
-func _nav_map() -> RID:
-	return agent.get_navigation_map()
-
-func _closest_on_nav(p: Vector2) -> Vector2:
-	return NavigationServer2D.map_get_closest_point(_nav_map(), p)
-
+# ================== READY ==================
 func _ready() -> void:
-	randomize()
-	_pick_new_wander_target()
-	_emit_all()
-	state_changed.emit(_state_to_string())
+	if tile_node.is_empty():
+		push_error("Asigná 'tile_node' al TileMap/TileMapLayer del piso.")
+		return
 
+	var n := get_node(tile_node)
+	if n is TileMapLayer:
+		ground_layer = n
+		if "get_tile_map" in ground_layer:
+			ground_tm = ground_layer.get_tile_map()
+		else:
+			ground_tm = ground_layer.get_parent() as TileMap
+	elif n is TileMap:
+		ground_tm = n
+	else:
+		push_error("El nodo asignado no es TileMap ni TileMapLayer.")
+		return
+
+	# Snap inicial
+	var c := _world_to_cell(global_position)
+	global_position = _cell_center_world(c)
+
+	# Idle inicial
+	if anim:
+		anim.speed_scale = 1.0
+		_play_idle_anim()
+
+# ================== LOOP ==================
 func _process(delta: float) -> void:
-	_tick_needs(delta)
-	_tick_cooldowns(delta)
-	_fsm_step(delta)
+	if _moving:
+		return
+
+	# Wander básico
+	_wander_timer -= delta
+	if _wander_timer <= 0.0:
+		_wander_timer = wander_every
+		_step_random()
 
 func _physics_process(delta: float) -> void:
-	# Si por cualquier motivo salió del navmesh, lo traemos de vuelta
-	var snap := _closest_on_nav(global_position)
-	if snap.distance_to(global_position) > 2.0:
-		global_position = snap
-		velocity = Vector2.ZERO
-
-	_move_with_agent(delta)
-
-	# Animación según estado/velocidad
-	if _state == State.SLEEP:
-		_update_iso_animation(Vector2.ZERO, false, "sleep")
-	else:
-		_update_iso_animation(velocity, velocity.length() > 0.1)
-
-# ==================== Necesidades ====================
-func _tick_needs(delta: float) -> void:
-	hunger = clampf(hunger + hunger_rate * delta, 0.0, max_value)
-	if hunger >= hungry_threshold:
-		mood = clampf(mood - mood_drain_hungry * delta, 0.0, max_value)
-	else:
-		mood = clampf(mood + mood_recover * delta, 0.0, max_value)
-
-	match _state:
-		State.SLEEP:
-			energy = clampf(energy + energy_recover_sleep * delta, 0.0, max_value)
-		State.WANDER, State.GO_TO_POI, State.USE_POI:
-			energy = clampf(energy - energy_drain_walk * delta, 0.0, max_value)
-		_:
-			pass
-
-	hunger_changed.emit(hunger)
-	energy_changed.emit(energy)
-	mood_changed.emit(mood)
-
-func _tick_cooldowns(delta: float) -> void:
-	for k in _cooldowns.keys():
-		_cooldowns[k] = max(0.0, _cooldowns[k] - delta)
-
-# ==================== FSM ====================
-func _fsm_step(delta: float) -> void:
-	if energy <= tired_threshold and _state != State.SLEEP:
-		_set_state(State.SLEEP)
-	elif hunger >= hungry_threshold and _state != State.GO_TO_POI and _cooldowns["food"] <= 0.0:
-		_seek_poi("food")
-	elif mood <= 35.0 and _state != State.GO_TO_POI and _cooldowns["toy"] <= 0.0:
-		_seek_poi("toy")
-
-	match _state:
-		State.IDLE:
-			_time_to_new_target -= delta
-			if _time_to_new_target <= 0:
-				_set_state(State.WANDER)
-
-		State.WANDER:
-			_wander_logic(delta)
-
-		State.GO_TO_POI:
-			if _poi_target == null or not _poi_target.is_inside_tree():
-				_set_state(State.WANDER)
-				return
-			if agent.is_navigation_finished():
-				_set_state(State.USE_POI)
-
-		State.USE_POI:
-			if _poi_target == null:
-				_set_state(State.WANDER)
-				return
-			_use_poi(_poi_target)
-			_poi_target = null
-			_set_state(State.WANDER)
-
-		State.SLEEP:
-			velocity = Vector2.ZERO
-			if energy >= 85.0:
-				_cooldowns["bed"] = cd_after_sleep
-				_set_state(State.WANDER)
-
-# ==================== Wander ====================
-func _wander_logic(delta: float) -> void:
-	_time_to_new_target -= delta
-	if _time_to_new_target <= 0.0 or _is_close_to(agent.target_position, 12.0):
-		_pick_new_wander_target()
-
-# ==================== Movimiento con NavigationAgent2D ====================
-func _iso_quantize(dir: Vector2) -> Vector2:
-	if dir.length() < 0.001:
-		return Vector2.ZERO
-
-	var nv: Vector2 = dir.normalized()
-	var best: Vector2 = ISO_DIRS[0].normalized()
-	var best_dot: float = -INF
-
-	for d: Vector2 in ISO_DIRS:
-		var nd: Vector2 = d.normalized()
-		var dot: float = nv.dot(nd)
-		if dot > best_dot:
-			best_dot = dot
-			best = nd
-
-	return best
-
-
-
-func _move_with_agent(delta: float) -> void:
-	if agent.is_navigation_finished():
-		velocity = Vector2.ZERO
-		move_and_slide()
+	if not _moving:
 		return
 
-	var next_point := agent.get_next_path_position()
-	var to_next := next_point - global_position
+	var to_target: Vector2 = _current_target - global_position
+	var px_per_sec: float = tiles_per_second * float(_tile_size().x)
+	var step: Vector2 = to_target.normalized() * px_per_sec * delta
 
-	# cuantizamos a diagonales isométricas
-	var dir := _iso_quantize(to_next)
-	var desired := dir * move_speed
-
-	# Si usás avoidance, podés usar set_velocity + señal velocity_computed
-	velocity = desired
-	move_and_slide()
-
-# ==================== POIs ====================
-func _seek_poi(kind: String) -> void:
-	var poi := _find_nearest_poi(kind)
-	if poi:
-		_poi_kind = kind
-		_poi_target = poi
-		agent.target_position = _closest_on_nav(poi.global_position)  # clamp target
-		_set_state(State.GO_TO_POI)
+	if to_target.length() <= stop_epsilon or step.length() >= to_target.length():
+		global_position = _current_target
+		_advance_path_or_stop()
 	else:
-		_set_state(State.WANDER)
+		global_position += step
+		_play_walk_anim(to_target)
 
-func _use_poi(poi: Node2D) -> void:
-	var kind := _get_poi_kind(poi)
-	match kind:
-		"food":
-			var nutrition := 40.0
-			if "nutrition" in poi: nutrition = float(poi.nutrition)
-			hunger = clampf(hunger - nutrition, 0.0, max_value)
-			energy = clampf(energy + nutrition * 0.25, 0.0, max_value)
-			mood   = clampf(mood + 10.0, 0.0, max_value)
-			_cooldowns["food"] = cd_after_eat
-			if poi.has_method("consume"): poi.consume()
-		"bed":
-			energy = clampf(energy + 35.0, 0.0, max_value)
-			mood   = clampf(mood + 6.0, 0.0, max_value)
-			_cooldowns["bed"] = cd_after_sleep
-		"toy":
-			mood   = clampf(mood + 25.0, 0.0, max_value)
-			energy = clampf(energy - 8.0, 0.0, max_value)
-			_cooldowns["toy"] = cd_after_play
-		"toilet":
-			mood   = clampf(mood + 5.0, 0.0, max_value)
-	_emit_all()
+# ================== API ==================
+func go_to_cell(target_cell: Vector2i) -> void:
+	var start: Vector2i = _current_cell()
+	if start == target_cell:
+		return
 
-func _find_nearest_poi(kind: String) -> Node2D:
-	var best: Node2D = null
-	var best_d := INF
-	for n in get_tree().get_nodes_in_group("poi"):
-		if n is Node2D and n.is_inside_tree():
-			if _get_poi_kind(n) == kind:
-				var d := global_position.distance_to(n.global_position)
-				if d < best_d:
-					best_d = d
-					best = n
-	return best
+	_path_cells = _astar_path_cells(start, target_cell)
+	if _path_cells.size() <= 1:
+		return
 
-func _get_poi_kind(n: Node) -> String:
-	if "kind" in n:
-		return str(n.kind)
-	if n.has_meta("kind"):
-		return str(n.get_meta("kind"))
-	return ""
+	_path_world.clear()
+	for cell in _path_cells:
+		_path_world.append(_cell_center_world(cell))
 
-# ==================== Helpers ====================
-func _pick_new_wander_target() -> void:
-	var angle := randf() * TAU
-	var dist := randf() * wander_radius
-	var offset := Vector2(cos(angle), sin(angle)) * dist
-	var p := global_position + offset
-	agent.target_position = _closest_on_nav(p)  # clamp aleatorio al navmesh
-	_time_to_new_target = randf_range(1.2, 3.0)
+	_path_world.remove_at(0) # descartar actual
+	_set_next_target_from_path()
 
-func _is_close_to(p: Vector2, r: float) -> bool:
-	return global_position.distance_to(p) <= r
+# ================== WANDER ==================
+func _step_random() -> void:
+	var start: Vector2i = _current_cell()
+	var candidates: Array[Vector2i] = []
+	for d in DIRS4:
+		var c := start + d
+		if not _is_blocked(c):
+			candidates.append(c)
+	if candidates.is_empty():
+		_play_idle_anim()
+		return
+	candidates.shuffle()
+	go_to_cell(candidates.front())
 
-func _set_state(s: State) -> void:
-	if _state == s: return
-	_state = s
-	state_changed.emit(_state_to_string())
+# ================== PATH ==================
+func _advance_path_or_stop() -> void:
+	if _path_world.size() == 0:
+		_moving = false
+		_play_idle_anim()
+		return
+	_set_next_target_from_path()
 
-func _state_to_string() -> String:
-	match _state:
-		State.IDLE: return "IDLE"
-		State.WANDER: return "WANDER"
-		State.GO_TO_POI: return "GO_TO_POI"
-		State.USE_POI: return "USE_POI"
-		State.SLEEP: return "SLEEP"
-	return "UNKNOWN"
+func _set_next_target_from_path() -> void:
+	_current_target = _path_world[0]
+	_path_world.remove_at(0)
+	_moving = true
 
-func _emit_all() -> void:
-	hunger_changed.emit(hunger)
-	energy_changed.emit(energy)
-	mood_changed.emit(mood)
+# ================== A* ==================
+func _astar_path_cells(start: Vector2i, goal: Vector2i) -> Array[Vector2i]:
+	var used: Rect2i = _used_rect()
+	var grid := AStarGrid2D.new()
+	grid.region = Rect2i(used.position, used.size)
+	grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	grid.update()
 
-# ===== Animación isométrica =====
-func _play_anim(name: String) -> void:
-	var frames := anim.sprite_frames
+	for y in range(used.position.y, used.position.y + used.size.y):
+		for x in range(used.position.x, used.position.x + used.size.x):
+			var c := Vector2i(x, y)
+			if _is_blocked(c):
+				grid.set_point_solid(c, true)
+
+	if grid.is_point_solid(start) or grid.is_point_solid(goal):
+		return [start]
+
+	return grid.get_id_path(start, goal)
+
+# ================== BLOQUEOS ==================
+func _is_blocked(c: Vector2i) -> bool:
+	if not _cell_has_floor(c):
+		return true
+	var data: TileData = _get_tile_data(c)
+	if data and data.get_custom_data("blocked") == true:
+		return true
+	return false
+
+# ================== WRAPPERS ==================
+func _tile_size() -> Vector2i:
+	if ground_layer != null:
+		return ground_layer.tile_set.tile_size
+	else:
+		return ground_tm.tile_set.tile_size
+
+func _cell_has_floor(c: Vector2i) -> bool:
+	if ground_layer != null:
+		return ground_layer.get_cell_source_id(c) != -1
+	else:
+		return ground_tm.get_cell_source_id(0, c) != -1
+
+func _get_tile_data(c: Vector2i) -> TileData:
+	if ground_layer != null:
+		return ground_layer.get_cell_tile_data(c)
+	else:
+		return ground_tm.get_cell_tile_data(0, c)
+
+func _world_to_cell(world_pos: Vector2) -> Vector2i:
+	if ground_layer != null:
+		return ground_layer.local_to_map(ground_layer.to_local(world_pos))
+	else:
+		return ground_tm.local_to_map(ground_tm.to_local(world_pos))
+
+func _cell_center_world(c: Vector2i) -> Vector2:
+	if ground_layer != null:
+		return ground_layer.to_global(ground_layer.map_to_local(c))
+	else:
+		return ground_tm.to_global(ground_tm.map_to_local(c))
+
+func _used_rect() -> Rect2i:
+	if ground_layer != null:
+		return ground_layer.get_used_rect()
+	else:
+		return ground_tm.get_used_rect()
+
+func _current_cell() -> Vector2i:
+	return _world_to_cell(global_position)
+
+# ================== ANIMACIÓN ==================
+func _play_anim_safe(name: String) -> void:
+	var frames: SpriteFrames = anim.sprite_frames
 	if frames and frames.has_animation(name):
-		anim.play(name)
+		if anim.animation != name:
+			anim.play(name)
+		elif anim.speed_scale == 0.0:
+			anim.speed_scale = 1.0
 
-func _update_iso_animation(v: Vector2, moving: bool, force_state: String = "") -> void:
-	if not is_instance_valid(anim) or anim.sprite_frames == null:
+func _play_walk_anim(to_target: Vector2) -> void:
+	if to_target.length() < 0.1:
+		_play_idle_anim()
 		return
 
-	if force_state == "sleep":
-		_play_anim("sleep")
-		return
+	var dir: Vector2 = to_target.normalized()
+	var ne := Vector2( 1, -1).normalized()
+	var nw := Vector2(-1, -1).normalized()
+	var se := Vector2( 1,  1).normalized()
+	var sw := Vector2(-1,  1).normalized()
 
-	if v.length() < 0.1:
-		_play_anim("idle_%s" % _last_dir)
-		return
-
-	var best := "SE"
-	var best_dot := -INF
-	var nv := v.normalized()
-	for d in _DIRS:
-		var dirv: Vector2 = (d["v"] as Vector2)  # ya normalizado por INV_SQRT2
-		var dot := nv.dot(dirv)
+	var best: String = "SE"
+	var best_dot: float = -INF
+	var options := {"NE": ne, "NW": nw, "SE": se, "SW": sw}
+	for name in options.keys():
+		var d: Vector2 = options[name]
+		var dot: float = dir.dot(d)
 		if dot > best_dot:
 			best_dot = dot
-			best = d["name"]
+			best = String(name)
 
 	_last_dir = best
-	_play_anim("walk_%s" % best)
+	anim.speed_scale = 1.0
+	_play_anim_safe("walk_%s" % best)
+
+func _play_idle_anim() -> void:
+	anim.speed_scale = 1.0
+	_play_anim_safe("idle_%s" % _last_dir)
