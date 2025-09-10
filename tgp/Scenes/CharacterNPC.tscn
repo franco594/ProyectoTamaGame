@@ -172,9 +172,12 @@ size = Vector2(13, 47)
 script = ExtResource("1_luumf")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+y_sort_enabled = true
+position = Vector2(9, -12)
 sprite_frames = SubResource("SpriteFrames_yswcl")
 animation = &"walk_SW"
-frame_progress = 0.116587
+frame_progress = 0.743602
+offset = Vector2(0, -20)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
