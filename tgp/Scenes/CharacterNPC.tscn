@@ -118,7 +118,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_SW",
-"speed": 5.0
+"speed": 2.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -129,7 +129,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_NE",
-"speed": 2.0
+"speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -140,7 +140,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_NW",
-"speed": 2.0
+"speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -151,7 +151,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_SE",
-"speed": 2.0
+"speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -162,7 +162,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_SW",
-"speed": 2.0
+"speed": 3.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w72ig"]
@@ -174,7 +174,7 @@ script = ExtResource("1_luumf")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_yswcl")
 animation = &"walk_SW"
-frame_progress = 0.45794
+frame_progress = 0.116587
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false

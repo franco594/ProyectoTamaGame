@@ -1,24 +1,45 @@
 extends CharacterBody2D
 
 # ================== REFERENCIAS ==================
-@export var tile_node: NodePath                   # Asigná el TileMap o TileMapLayer del piso
+@export var tile_node: NodePath                   # TileMap o TileMapLayer del piso
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 
-# Soporte dual: TileMap o TileMapLayer
-var ground_tm: TileMap = null
-var ground_layer: TileMapLayer = null
+var ground_tm: TileMap = null                     # si el piso es TileMap
+var ground_layer: TileMapLayer = null             # si el piso es TileMapLayer
 
-# ================== MOVIMIENTO GRID ==================
-@export var tiles_per_second: float = 6.0         # celdas por segundo
-@export var stop_epsilon: float = 1.0             # tolerancia al centro de celda (px)
-@export var wander_every: float = 1.2             # cada cuánto da UN paso aleatorio (s)
+# ================== MOVIMIENTO / FEEL ==================
+@export var tiles_per_second: float = 1.5         # celdas por segundo (bajito para ver pasos)
+@export var acceleration_px: float = 500    # px/s^2 (suaviza arranque y frenado)
+@export var stop_epsilon: float = 0        # px; cuándo consideramos “llegado” al centro
 
-var _path_world: PackedVector2Array = PackedVector2Array() # centros de celdas en mundo
-var _path_cells: Array[Vector2i] = []             # camino en coordenadas de mapa
-var _current_target: Vector2 = Vector2.ZERO       # punto mundo (centro de celda objetivo)
+# Wander / Paseos
+@export var wander_every: float = 1.2             # cada cuánto intenta planificar paseo (s)
+@export var wander_min_steps: int = 1             # mínimo de celdas a recorrer por paseo
+@export var wander_max_steps: int = 20            # máximo de celdas a recorrer por paseo
+
+# Pausas naturales al llegar
+@export var idle_pause_min: float = 0.4           # pausa mínima (s)
+@export var idle_pause_max: float = 5           # pausa máxima (s)
+
+# Sincronía animación-camino
+@export var base_walk_fps: float = 3           # FPS con que creaste tus walk_* en SpriteFrames
+@export var min_anim_speed: float = 0.75          # límites de multiplicador de anim
+@export var max_anim_speed: float = 1.35
+
+# Bobbing sutil (sensación de peso)
+@export var bob_amount: float = 1.0               # px
+@export var bob_speed: float = 8.0                # frecuencia
+
+# ================== ESTADO INTERNO ==================
+var _path_world: PackedVector2Array = PackedVector2Array() # centros de celdas (mundo)
+var _path_cells: Array[Vector2i] = []                       # camino en celdas
+var _current_target: Vector2 = Vector2.ZERO                 # centro de celda objetivo
 var _wander_timer: float = 0.0
 var _moving: bool = false
-var _last_dir: String = "SE"                      # para idle
+var _wander_scheduled: bool = false
+var _last_dir: String = "SE"                                # para idle
+var _bob_phase: float = 0.0
+var _base_sprite_pos: Vector2 = Vector2.ZERO
 
 # 4 vecinos (grilla iso/diamond)
 const DIRS4: Array[Vector2i] = [
@@ -30,53 +51,62 @@ const DIRS4: Array[Vector2i] = [
 
 # ================== ARRANQUE ==================
 func _ready() -> void:
-	# Intentar resolver referencias al TileMap/Layer
 	_ensure_tile_refs()
-	# Esperar un frame por si el mapa se instanció este mismo tick
 	await get_tree().process_frame
 	_ensure_tile_refs()
 
-	# Snap inicial al centro de celda si ya tenemos piso
+	# Snap inicial al centro de celda
 	if ground_layer != null or ground_tm != null:
 		var c: Vector2i = _world_to_cell(global_position)
 		global_position = _cell_center_world(c)
 
-	# Animación por defecto
 	if anim != null:
 		anim.speed_scale = 1.0
 		_play_idle_anim()
+		_base_sprite_pos = anim.position
 
 # ================== LOOP ==================
 func _process(delta: float) -> void:
-	if _moving:
+	# Si está caminando o hay pausa planificada, no dispares otro paseo aquí
+	if _moving or _wander_scheduled:
 		return
 
 	_wander_timer -= delta
 	if _wander_timer <= 0.0:
 		_wander_timer = wander_every
-		_step_random()
+		_wander_pick_long_target()   # planifica paseo de varias celdas
 
 func _physics_process(delta: float) -> void:
-	# Si no hay piso resuelto, no hacer nada
 	if not _ensure_tile_refs():
 		return
-
 	if not _moving:
 		return
 
 	var to_target: Vector2 = _current_target - global_position
-	var px_per_sec: float = tiles_per_second * float(_tile_size().x) # aprox
-	var step: Vector2 = to_target.normalized() * px_per_sec * delta
+	var px_per_sec: float = tiles_per_second * float(_tile_size().x)
+	var desired: Vector2 = to_target.normalized() * px_per_sec
 
-	if to_target.length() <= stop_epsilon or step.length() >= to_target.length():
-		# Llegó a la celda: snap al centro exacto
+	# --- Movimiento con aceleración (natural) ---
+	var step: Vector2
+	if acceleration_px > 0.0:
+		velocity = velocity.move_toward(desired, acceleration_px * delta)
+		step = velocity * delta
+	else:
+		step = desired * delta
+		velocity = desired
+
+	# --- Evitar sobrepasar el objetivo; mantener walk 1 frame al aterrizar ---
+	if step.length() >= to_target.length() or to_target.length() <= stop_epsilon:
 		global_position = _current_target
+		_play_walk_anim(to_target)  # usa el vector previo; evita corte brusco
 		_advance_path_or_stop()
 	else:
 		global_position += step
-		_play_walk_anim(to_target)
+		_play_walk_anim(step)       # anim en base al movimiento real
 
-# ================== API: IR A UNA CELDA ==================
+	_apply_walk_bob(delta)
+
+# ================== API ==================
 func go_to_cell(target_cell: Vector2i) -> void:
 	if not _ensure_tile_refs():
 		return
@@ -98,29 +128,64 @@ func go_to_cell(target_cell: Vector2i) -> void:
 		_path_world.remove_at(0)
 	_set_next_target_from_path()
 
-# ================== WANDER: UN PASO ALEATORIO ==================
-func _step_random() -> void:
+# ================== WANDER ==================
+func _wander_pick_long_target() -> void:
 	if not _ensure_tile_refs():
 		return
+
 	var start: Vector2i = _current_cell()
-	var candidates: Array[Vector2i] = []
-	for d in DIRS4:
-		var c: Vector2i = start + d
-		if not _is_blocked(c):
-			candidates.append(c)
-	if candidates.is_empty():
-		_play_idle_anim()
+	var tries: int = 24
+	var min_s: int = max(1, wander_min_steps)
+	var max_s: int = max(min_s, wander_max_steps)
+	var best: Vector2i = start
+	var used: Rect2i = _used_rect()
+
+	while tries > 0:
+		tries -= 1
+		# Distancia manhattan aleatoria entre min y max
+		var dist: int = randi_range(min_s, max_s)
+		var dx: int = randi_range(-dist, dist)
+		var dy: int = dist - abs(dx)
+		if randi() % 2 == 0:
+			dy = -dy
+		var cand: Vector2i = start + Vector2i(dx, dy)
+
+		if not used.has_point(cand):
+			continue
+		if _is_blocked(cand):
+			continue
+
+		best = cand
+		break
+
+	if best != start:
+		go_to_cell(best)
+
+func _schedule_next_wander() -> void:
+	if _wander_scheduled:
 		return
-	candidates.shuffle()
-	go_to_cell(candidates.front())
+	_wander_scheduled = true
+	call_deferred("_do_schedule_next_wander")
+
+func _do_schedule_next_wander() -> void:
+	await get_tree().create_timer(randf_range(idle_pause_min, idle_pause_max)).timeout
+	_wander_scheduled = false
+	if not _moving:
+		_wander_pick_long_target()
 
 # ================== PATH TILE A TILE ==================
 func _advance_path_or_stop() -> void:
 	if _path_world.size() == 0:
 		_moving = false
-		_play_idle_anim()
+		velocity = Vector2.ZERO
+		call_deferred("_to_idle_after_frame")   # deja 1 frame de walk antes de idle
 		return
 	_set_next_target_from_path()
+
+func _to_idle_after_frame() -> void:
+	await get_tree().process_frame
+	_play_idle_anim()
+	_schedule_next_wander()
 
 func _set_next_target_from_path() -> void:
 	_current_target = _path_world[0]
@@ -175,31 +240,31 @@ func _ensure_tile_refs() -> bool:
 
 	var n: Node = null
 
-	# 1) Intentar con lo asignado en el Inspector
+	# 1) Inspector
 	if not tile_node.is_empty():
 		n = get_node_or_null(tile_node)
 
-	# 2) Autodetección: grupo "ground"
+	# 2) Grupo "ground"
 	if n == null:
 		var g: Node = get_tree().get_first_node_in_group("ground")
 		if g != null:
 			n = g
 
-	# 3) Autodetección: buscar TileMapLayer por grupo o por tipo
+	# 3) Buscar TileMapLayer
 	if n == null:
 		var layers: Array = get_tree().get_nodes_in_group("TileMapLayer")
 		if layers.size() > 0:
 			n = layers[0]
+
+	# 4) Buscar TileMap
 	if n == null:
-		# fallback: primer TileMap en la escena si existe
 		var maps: Array = get_tree().get_nodes_in_group("TileMap")
 		if maps.size() > 0:
 			n = maps[0]
 
-	# 4) Asignación final si el nodo es válido
+	# 5) Asignación final
 	if n is TileMapLayer:
 		ground_layer = n
-		# Intentar obtener el TileMap dueño
 		if "get_tile_map" in ground_layer:
 			ground_tm = ground_layer.get_tile_map()
 		else:
@@ -214,7 +279,7 @@ func _ensure_tile_refs() -> bool:
 # ================== WRAPPERS SEGUROS (TileMap / TileMapLayer) ==================
 func _tile_size() -> Vector2i:
 	if not _ensure_tile_refs():
-		return Vector2i(32, 32) # fallback
+		return Vector2i(32, 32)
 	if ground_layer != null:
 		return ground_layer.tile_set.tile_size
 	else:
@@ -263,7 +328,7 @@ func _used_rect() -> Rect2i:
 func _current_cell() -> Vector2i:
 	return _world_to_cell(global_position)
 
-# ================== ANIMACIÓN ISO (idle/walk NE, NW, SE, SW) ==================
+# ================== ANIMACIÓN / FEEDBACK ==================
 func _play_anim_safe(name: String) -> void:
 	if anim == null:
 		return
@@ -274,14 +339,16 @@ func _play_anim_safe(name: String) -> void:
 		elif anim.speed_scale == 0.0:
 			anim.speed_scale = 1.0
 
-func _play_walk_anim(to_target: Vector2) -> void:
+func _play_walk_anim(move_vec: Vector2) -> void:
 	if anim == null:
 		return
-	if to_target.length() < 0.1:
-		_play_idle_anim()
+
+	# Histéresis: si el movimiento es diminuto, no cortes a idle aún
+	if move_vec.length() < 0.05:
 		return
 
-	var dir: Vector2 = to_target.normalized()
+	# Dirección iso (NE/NW/SE/SW)
+	var dir: Vector2 = move_vec.normalized()
 	var ne: Vector2 = Vector2( 1, -1).normalized()
 	var nw: Vector2 = Vector2(-1, -1).normalized()
 	var se: Vector2 = Vector2( 1,  1).normalized()
@@ -298,7 +365,15 @@ func _play_walk_anim(to_target: Vector2) -> void:
 			best = names[i]
 
 	_last_dir = best
-	anim.speed_scale = 1.0
+
+	# Sincronía anim ↔ velocidad real
+	var px_per_sec: float = tiles_per_second * float(_tile_size().x)
+	var speed_ratio: float = 0.0
+	if px_per_sec > 0.0:
+		speed_ratio = velocity.length() / px_per_sec
+	var scale_now: float = clamp(speed_ratio * (10.0 / base_walk_fps), min_anim_speed, max_anim_speed)
+	anim.speed_scale = scale_now
+
 	_play_anim_safe("walk_%s" % best)
 
 func _play_idle_anim() -> void:
@@ -306,3 +381,15 @@ func _play_idle_anim() -> void:
 		return
 	anim.speed_scale = 1.0
 	_play_anim_safe("idle_%s" % _last_dir)
+
+func _apply_walk_bob(delta: float) -> void:
+	if anim == null:
+		return
+	# Sin bob si no hay movimiento perceptible
+	if velocity.length() < 1.0:
+		anim.position = _base_sprite_pos
+		_bob_phase = 0.0
+		return
+	_bob_phase += bob_speed * delta
+	var y_off: float = -abs(sin(_bob_phase)) * bob_amount
+	anim.position = _base_sprite_pos + Vector2(0, y_off)
