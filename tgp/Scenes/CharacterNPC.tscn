@@ -245,13 +245,12 @@ script = ExtResource("1_luumf")
 y_sort_enabled = true
 position = Vector2(9, -12)
 sprite_frames = SubResource("SpriteFrames_yswcl")
-animation = &"smoking"
-frame_progress = 0.441272
+animation = &"walk_NE"
+frame_progress = 0.867715
 offset = Vector2(0, -20)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
-position = Vector2(0.5, 8.5)
+position = Vector2(10, -25)
 shape = SubResource("RectangleShape2D_w72ig")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
