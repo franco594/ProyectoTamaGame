@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cwbp4rrjua33k"]
+[gd_scene load_steps=33 format=3 uid="uid://cwbp4rrjua33k"]
 
 [ext_resource type="Script" uid="uid://beuto5n1frgnt" path="res://Scripts/character_npc.gd" id="1_luumf"]
 [ext_resource type="Texture2D" uid="uid://flwq66lfdda0" path="res://Resources/Personaje/TileSetMimiSprite.png" id="1_s2kpd"]
@@ -40,9 +40,25 @@ region = Rect2(32, 0, 32, 64)
 atlas = ExtResource("1_s2kpd")
 region = Rect2(0, 0, 32, 64)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_foslr"]
+atlas = ExtResource("3_w72ig")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s43dw"]
+atlas = ExtResource("3_w72ig")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5xgkc"]
+atlas = ExtResource("3_w72ig")
+region = Rect2(128, 0, 64, 64)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_00lva"]
 atlas = ExtResource("3_w72ig")
 region = Rect2(0, 64, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bbofe"]
+atlas = ExtResource("3_w72ig")
+region = Rect2(192, 64, 32, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6omp6"]
 atlas = ExtResource("3_w72ig")
@@ -157,7 +173,45 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_foslr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s43dw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5xgkc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s43dw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5xgkc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_foslr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_foslr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_foslr")
+}],
+"loop": true,
+"name": &"sit_sofa",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_00lva")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bbofe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bbofe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6omp6")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_6omp6")
@@ -173,6 +227,12 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_68p0g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_00lva")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_00lva")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_00lva")
@@ -245,8 +305,9 @@ script = ExtResource("1_luumf")
 y_sort_enabled = true
 position = Vector2(9, -12)
 sprite_frames = SubResource("SpriteFrames_yswcl")
-animation = &"walk_NE"
-frame_progress = 0.867715
+animation = &"sit_sofa"
+frame = 4
+frame_progress = 0.0736768
 offset = Vector2(0, -20)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
