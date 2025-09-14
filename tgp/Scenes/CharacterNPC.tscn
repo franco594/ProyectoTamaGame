@@ -296,7 +296,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w72ig"]
-size = Vector2(13, 47)
+size = Vector2(13, 48.5)
 
 [node name="NPC" type="CharacterBody2D"]
 script = ExtResource("1_luumf")
@@ -305,12 +305,12 @@ script = ExtResource("1_luumf")
 y_sort_enabled = true
 position = Vector2(9, -12)
 sprite_frames = SubResource("SpriteFrames_yswcl")
-animation = &"idle_SW"
-frame_progress = 0.768705
+animation = &"Idle"
+frame_progress = 0.37721
 offset = Vector2(0, -20)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(10, -25)
+position = Vector2(9, -24)
 shape = SubResource("RectangleShape2D_w72ig")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]

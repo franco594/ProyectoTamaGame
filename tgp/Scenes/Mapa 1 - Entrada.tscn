@@ -1,15 +1,13 @@
-[gd_scene load_steps=12 format=4 uid="uid://b1r5hy2a1om5f"]
+[gd_scene load_steps=10 format=4 uid="uid://b1r5hy2a1om5f"]
 
 [ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa/TileSetCasa.png" id="1_kwa2v"]
-[ext_resource type="Script" uid="uid://x852fudfnlgh" path="res://Scenes/debug_grid.gd" id="8_6kdt8"]
-[ext_resource type="PackedScene" uid="uid://cwbp4rrjua33k" path="res://Scenes/CharacterNPC.tscn" id="8_c85mw"]
 
 [sub_resource type="TileSet" id="TileSet_622qf"]
 tile_shape = 1
 tile_layout = 5
 tile_size = Vector2i(32, 16)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_td6es"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gjcab"]
 texture = ExtResource("1_kwa2v")
 texture_region_size = Vector2i(32, 16)
 0:0/0 = 0
@@ -153,7 +151,7 @@ tile_layout = 5
 tile_size = Vector2i(32, 16)
 custom_data_layer_0/name = "Block"
 custom_data_layer_0/type = 1
-sources/1 = SubResource("TileSetAtlasSource_td6es")
+sources/1 = SubResource("TileSetAtlasSource_gjcab")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6kdt8"]
 texture = ExtResource("1_kwa2v")
@@ -239,18 +237,6 @@ y_sort_enabled = true
 position = Vector2(-6, 25)
 tile_set = SubResource("TileSet_622qf")
 
-[node name="DebugGrid" type="Node2D" parent="."]
-top_level = true
-z_index = 4
-script = ExtResource("8_6kdt8")
-floor_node = NodePath("../Piso")
-block_layers = Array[NodePath]([NodePath("../HuellaObjetos"), NodePath("../Pared")])
-
-[node name="HuellaObjetos" type="TileMapLayer" parent="."]
-y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAEAPT/AwAIAAIAAAAJAAEAAQADAAAAAAAMAPz/AQADAAAAAAAMAPv/AQADAAAAAAAGAPv/AQADAAAAAAAGAPz/AQADAAAAAAAHAPz/AQADAAAAAAAHAPv/AQADAAAAAAA=")
-tile_set = SubResource("TileSet_v2xam")
-
 [node name="Objetos" type="TileMapLayer" parent="."]
 y_sort_enabled = true
 tile_map_data = PackedByteArray("AAAEAPT/AwAIAAIAAAA=")
@@ -266,17 +252,3 @@ z_index = -3
 y_sort_enabled = true
 tile_map_data = PackedByteArray("AAADAAIAAQAAAAAAAAADAAEAAQAAAAAAAAADAP//AQAAAAAAAAADAAAAAQAAAAAAAAADAP7/AQAAAAAAAAADAPz/AQAAAAAAAAADAP3/AQAAAAAAAAADAPv/AQAAAAAAAAADAPr/AQAAAAAAAAADAPn/AQAAAAAAAAADAPj/AQAAAAAAAAAFAPf/AQAAAAAAABAGAPf/AQAAAAAAABAHAPf/AQAAAAAAABAIAPf/AQAAAAAAABAJAPf/AQAAAAAAABAKAPf/AQAAAAAAABALAPf/AQAAAAAAABAMAPf/AQAAAAAAABANAPf/AQAAAAAAABAOAPf/AQAAAAAAABAEAPf/AQAAAAAAABADAPf/AAAEAAAAAAA=")
 tile_set = SubResource("TileSet_6kdt8")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(207, 31)
-offset = Vector2(0, -20)
-zoom = Vector2(2.5, 2.5)
-
-[node name="CharacterBody2D" parent="." instance=ExtResource("8_c85mw")]
-z_index = 2
-y_sort_enabled = true
-position = Vector2(199, 91)
-collision_layer = 255
-tile_node = NodePath("../Piso")
-block_layers = Array[NodePath]([NodePath("../HuellaObjetos")])
-dynamic_block_neighborhood = 6

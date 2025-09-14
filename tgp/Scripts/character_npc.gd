@@ -16,7 +16,7 @@ var _block_layers_nodes: Array = []                # nodos reales de block_layer
 
 # Wander / Paseos
 @export var wander_every: float = 1.2
-@export var wander_min_steps: int = 4
+@export var wander_min_steps: int = 1
 @export var wander_max_steps: int = 10
 
 # Pausas naturales
