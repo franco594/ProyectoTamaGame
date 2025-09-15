@@ -295,8 +295,8 @@ animations = [{
 "speed": 3.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_w72ig"]
-size = Vector2(13, 48.5)
+[sub_resource type="CircleShape2D" id="CircleShape2D_w72ig"]
+radius = 7.0
 
 [node name="NPC" type="CharacterBody2D"]
 script = ExtResource("1_luumf")
@@ -310,8 +310,8 @@ frame_progress = 0.361049
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -16)
-shape = SubResource("RectangleShape2D_w72ig")
+position = Vector2(1, 1)
+shape = SubResource("CircleShape2D_w72ig")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_desired_distance = 12.0

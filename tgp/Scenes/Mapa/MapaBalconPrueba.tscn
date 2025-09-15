@@ -16,6 +16,9 @@ tile_size = Vector2i(32, 16)
 custom_data_layer_0/name = "Blocked"
 custom_data_layer_0/type = 1
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_pp238"]
+radius = 8.0
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_utu4p"]
 texture = ExtResource("1_w6fy0")
 texture_region_size = Vector2i(32, 32)
@@ -627,15 +630,29 @@ custom_data_layer_0/name = "Block"
 custom_data_layer_0/type = 1
 sources/1 = SubResource("TileSetAtlasSource_pp238")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ucvjw"]
-size = Vector2(16, 16)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_pp238"]
-size = Vector2(16, 16)
-
 [node name="Mundo" type="TileMapLayer"]
 y_sort_enabled = true
 tile_set = SubResource("TileSet_pp238")
+
+[node name="Area2D" type="StaticBody2D" parent="."]
+disable_mode = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(64, 80)
+shape = SubResource("CircleShape2D_pp238")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(161, 81)
+shape = SubResource("CircleShape2D_pp238")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(112, 86)
+shape = SubResource("CircleShape2D_pp238")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(97, 63)
+shape = SubResource("CircleShape2D_pp238")
 
 [node name="Piso" type="TileMapLayer" parent="."]
 y_sort_enabled = true
@@ -654,7 +671,6 @@ tile_map_data = PackedByteArray("AAAGAAMAAAADAAAAAAAJAAAAAAAFAAAAAAAIAAIAAAAEAAE
 tile_set = SubResource("TileSet_g277f")
 
 [node name="Puertas" type="TileMapLayer" parent="."]
-visible = false
 tile_map_data = PackedByteArray("AAAIAAQAAAALAAIAABAKAAIAAAANAAIAAAA=")
 tile_set = SubResource("TileSet_wx4sh")
 
@@ -664,7 +680,7 @@ z_index = 2
 y_sort_enabled = true
 position = Vector2(102, 76)
 rotation = 0.0175728
-collision_layer = 255
+collision_layer = 2
 floor_snap_length = 0.8
 safe_margin = 5.0
 tile_node = NodePath("../Piso")
@@ -672,7 +688,7 @@ block_layers = Array[NodePath]([NodePath("../Objetos"), NodePath("../Pared")])
 dynamic_block_neighborhood = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(75, 87)
+position = Vector2(99, 95)
 offset = Vector2(0, -20)
 zoom = Vector2(2.5, 2.5)
 
@@ -680,29 +696,6 @@ zoom = Vector2(2.5, 2.5)
 y_sort_enabled = true
 tile_map_data = PackedByteArray("AAAEAPT/AwAIAAIAAAA=")
 tile_set = SubResource("TileSet_ucvjw")
-
-[node name="Area2D" type="Area2D" parent="."]
-disable_mode = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(64, 79)
-rotation = 0.785398
-shape = SubResource("RectangleShape2D_ucvjw")
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(160, 79)
-rotation = 0.785398
-shape = SubResource("RectangleShape2D_pp238")
-
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(95.641, 63.1025)
-rotation = 0.785398
-shape = SubResource("RectangleShape2D_pp238")
-
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(113, 87)
-rotation = 0.785398
-shape = SubResource("RectangleShape2D_pp238")
 
 [node name="DebugGrid" type="Node2D" parent="."]
 top_level = true
