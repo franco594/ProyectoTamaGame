@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://77pqr5hnqb70"]
+[gd_scene load_steps=19 format=4 uid="uid://77pqr5hnqb70"]
 
 [ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa/TileSetCasa.png" id="1_wu50f"]
 [ext_resource type="Texture2D" uid="uid://ejfc0mi486q4" path="res://Resources/Objetos/TileSetObjects1tile.png" id="2_hkiwt"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://vars0r6r8sw1" path="res://Resources/Objetos/TileSetObjects2tileV.png" id="4_marwi"]
 [ext_resource type="Texture2D" uid="uid://4sf3abv1s8b5" path="res://Resources/Objetos/TileSetObjects4tile.png" id="5_a60ir"]
 [ext_resource type="Texture2D" uid="uid://iy6jrota8k7j" path="res://Resources/Objetos/TileSetObjects6tile.png" id="6_o3vel"]
+[ext_resource type="Script" uid="uid://f8cbmhqktpa3" path="res://Scenes/Mapa/DoorToScene.gd" id="7_hkiwt"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_utu4p"]
 texture = ExtResource("1_wu50f")
@@ -271,6 +272,9 @@ sources/2 = SubResource("TileSetAtlasSource_ttish")
 sources/3 = SubResource("TileSetAtlasSource_qoltc")
 sources/4 = SubResource("TileSetAtlasSource_jqyyr")
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_siax1"]
+radius = 5.38516
+
 [node name="Mundo" type="TileMapLayer"]
 
 [node name="Piso" type="TileMapLayer" parent="."]
@@ -284,3 +288,17 @@ tile_set = SubResource("TileSet_oe35b")
 [node name="Objetos" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAAFAAIAAgAAAAAAABAJAAMAAAABAAEAAAAIAP3/AwACAAEAAAAGAP//AAACAAYAAAAGAAAAAAACAAcAAAAGAP3/AAAHAAYAABAIAP//AQACAAAAABA=")
 tile_set = SubResource("TileSet_g277f")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(99, 95)
+offset = Vector2(0, -55)
+zoom = Vector2(3.5, 3.5)
+
+[node name="DoorToScene" type="Area2D" parent="."]
+top_level = true
+script = ExtResource("7_hkiwt")
+target_scene = "uid://cs83f6yew7s0e"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene"]
+position = Vector2(83, 51)
+shape = SubResource("CircleShape2D_siax1")

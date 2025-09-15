@@ -296,21 +296,27 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_w72ig"]
-radius = 7.0
+radius = 8.0
 
 [node name="NPC" type="CharacterBody2D"]
+scale = Vector2(1, 0.988123)
+motion_mode = 1
 script = ExtResource("1_luumf")
+tiles_per_second = 2.0
+acceleration_px = 500.0
+stop_epsilon = 1.5
+bob_amount = 0.4
+dynamic_obstacle_group = ""
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 y_sort_enabled = true
-position = Vector2(-16, -58)
+position = Vector2(-16, -63)
 sprite_frames = SubResource("SpriteFrames_yswcl")
 animation = &"Idle"
-frame_progress = 0.361049
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(1, 1)
+position = Vector2(1, -4)
 shape = SubResource("CircleShape2D_w72ig")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]

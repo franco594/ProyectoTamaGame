@@ -1,12 +1,12 @@
 [gd_scene load_steps=25 format=4 uid="uid://cs83f6yew7s0e"]
 
-[ext_resource type="Script" uid="uid://x852fudfnlgh" path="res://Scenes/debug_grid.gd" id="1_pp238"]
 [ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa/TileSetCasa.png" id="1_w6fy0"]
 [ext_resource type="Texture2D" uid="uid://ejfc0mi486q4" path="res://Resources/Objetos/TileSetObjects1tile.png" id="2_mtaff"]
 [ext_resource type="Texture2D" uid="uid://doji3isbl7jhi" path="res://Resources/Objetos/TileSetObjects2tileH.png" id="3_resc1"]
 [ext_resource type="Texture2D" uid="uid://vars0r6r8sw1" path="res://Resources/Objetos/TileSetObjects2tileV.png" id="4_qbnvh"]
 [ext_resource type="Texture2D" uid="uid://4sf3abv1s8b5" path="res://Resources/Objetos/TileSetObjects4tile.png" id="5_vblwf"]
 [ext_resource type="Texture2D" uid="uid://iy6jrota8k7j" path="res://Resources/Objetos/TileSetObjects6tile.png" id="6_xcis5"]
+[ext_resource type="Script" uid="uid://f8cbmhqktpa3" path="res://Scenes/Mapa/DoorToScene.gd" id="8_pp238"]
 [ext_resource type="PackedScene" uid="uid://cwbp4rrjua33k" path="res://Scenes/CharacterNPC.tscn" id="8_ucvjw"]
 
 [sub_resource type="TileSet" id="TileSet_pp238"]
@@ -15,9 +15,6 @@ tile_layout = 5
 tile_size = Vector2i(32, 16)
 custom_data_layer_0/name = "Blocked"
 custom_data_layer_0/type = 1
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_pp238"]
-radius = 8.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_utu4p"]
 texture = ExtResource("1_w6fy0")
@@ -395,33 +392,6 @@ texture_region_size = Vector2i(64, 64)
 2:1/0/z_index = 5
 3:1/0 = 0
 3:1/0/z_index = 5
-4:4/0 = 0
-6:4/0 = 0
-7:4/0 = 0
-0:5/0 = 0
-1:5/0 = 0
-2:5/0 = 0
-3:5/0 = 0
-4:5/0 = 0
-5:5/0 = 0
-6:5/0 = 0
-7:5/0 = 0
-0:6/0 = 0
-1:6/0 = 0
-2:6/0 = 0
-3:6/0 = 0
-4:6/0 = 0
-5:6/0 = 0
-6:6/0 = 0
-7:6/0 = 0
-0:7/0 = 0
-1:7/0 = 0
-2:7/0 = 0
-3:7/0 = 0
-4:7/0 = 0
-5:7/0 = 0
-6:7/0 = 0
-7:7/0 = 0
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, -4)
 0:0/0/z_index = 6
@@ -630,29 +600,45 @@ custom_data_layer_0/name = "Block"
 custom_data_layer_0/type = 1
 sources/1 = SubResource("TileSetAtlasSource_pp238")
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_ucvjw"]
+radius = 5.38516
+
 [node name="Mundo" type="TileMapLayer"]
 y_sort_enabled = true
 tile_set = SubResource("TileSet_pp238")
 
-[node name="Area2D" type="StaticBody2D" parent="."]
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+top_level = true
 disable_mode = 2
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(64, 80)
-shape = SubResource("CircleShape2D_pp238")
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(62, 79)
+rotation = -2.30594
+scale = Vector2(6.47814, 3.97207)
+skew = 0.0296707
+polygon = PackedVector2Array(0.673649, -2.06465, -0.715888, -0.911426, -1.03527, 2.39007, 0.411226, 1.08836)
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(161, 81)
-shape = SubResource("CircleShape2D_pp238")
+[node name="CollisionShape2D2" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(157, 79)
+rotation = -2.30594
+scale = Vector2(8.17762, 3.95066)
+skew = 0.0296707
+polygon = PackedVector2Array(0.616686, -1.88816, -0.715888, -0.911426, -1.09224, 2.50147, 0.364184, 1.49741)
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(112, 86)
-shape = SubResource("CircleShape2D_pp238")
+[node name="CollisionShape2D3" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(111, 87)
+rotation = -2.30594
+scale = Vector2(8.64321, 4.19789)
+skew = 0.0296707
+polygon = PackedVector2Array(0.673649, -2.06465, -0.715888, -0.911426, -1.03527, 2.39007, 0.411226, 1.08836)
 
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(97, 63)
-shape = SubResource("CircleShape2D_pp238")
+[node name="CollisionShape2D4" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(95, 63)
+rotation = -2.30594
+scale = Vector2(7.91775, 4.1604)
+skew = 0.0296707
+polygon = PackedVector2Array(0.673649, -2.06465, -0.715888, -0.911426, -1.03527, 2.39007, 0.411226, 1.08836)
 
 [node name="Piso" type="TileMapLayer" parent="."]
 y_sort_enabled = true
@@ -671,6 +657,7 @@ tile_map_data = PackedByteArray("AAAGAAMAAAADAAAAAAAJAAAAAAAFAAAAAAAIAAIAAAAEAAE
 tile_set = SubResource("TileSet_g277f")
 
 [node name="Puertas" type="TileMapLayer" parent="."]
+modulate = Color(1, 1, 1, 0.294118)
 tile_map_data = PackedByteArray("AAAIAAQAAAALAAIAABAKAAIAAAANAAIAAAA=")
 tile_set = SubResource("TileSet_wx4sh")
 
@@ -678,28 +665,46 @@ tile_set = SubResource("TileSet_wx4sh")
 top_level = true
 z_index = 2
 y_sort_enabled = true
-position = Vector2(102, 76)
+position = Vector2(93, 95)
 rotation = 0.0175728
+scale = Vector2(1.00017, 0.9938)
 collision_layer = 2
 floor_snap_length = 0.8
 safe_margin = 5.0
 tile_node = NodePath("../Piso")
 block_layers = Array[NodePath]([NodePath("../Objetos"), NodePath("../Pared")])
+tiles_per_second = 1.8
+acceleration_px = 600.0
+wander_every = 5.0
+idle_pause_min = 1.0
+idle_pause_max = 2.0
 dynamic_block_neighborhood = 1
+max_slide_bounces = 4
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(99, 95)
-offset = Vector2(0, -20)
-zoom = Vector2(2.5, 2.5)
+offset = Vector2(-10, -25)
+zoom = Vector2(3.5, 3.5)
 
 [node name="HuellaObjetos" type="TileMapLayer" parent="."]
 y_sort_enabled = true
 tile_map_data = PackedByteArray("AAAEAPT/AwAIAAIAAAA=")
 tile_set = SubResource("TileSet_ucvjw")
 
-[node name="DebugGrid" type="Node2D" parent="."]
+[node name="DoorToScene" type="Area2D" parent="."]
 top_level = true
-z_index = 4
-script = ExtResource("1_pp238")
-floor_node = NodePath("../Piso")
-block_layers = Array[NodePath]([NodePath("../HuellaObjetos"), NodePath("../Pared")])
+script = ExtResource("8_pp238")
+target_scene = "uid://77pqr5hnqb70"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene"]
+position = Vector2(87, 90)
+shape = SubResource("CircleShape2D_ucvjw")
+
+[node name="DoorToScene2" type="Area2D" parent="."]
+top_level = true
+script = ExtResource("8_pp238")
+target_scene = "uid://dkeudqbsls178"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene2"]
+position = Vector2(149, 84)
+shape = SubResource("CircleShape2D_ucvjw")
