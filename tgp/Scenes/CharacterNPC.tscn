@@ -303,14 +303,14 @@ script = ExtResource("1_luumf")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 y_sort_enabled = true
-position = Vector2(9, -12)
+position = Vector2(-16, -58)
 sprite_frames = SubResource("SpriteFrames_yswcl")
 animation = &"Idle"
-frame_progress = 0.37721
-offset = Vector2(0, -20)
+frame_progress = 0.361049
+centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(9, -24)
+position = Vector2(0, -16)
 shape = SubResource("RectangleShape2D_w72ig")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=4 uid="uid://cs83f6yew7s0e"]
+[gd_scene load_steps=25 format=4 uid="uid://cs83f6yew7s0e"]
 
 [ext_resource type="Script" uid="uid://x852fudfnlgh" path="res://Scenes/debug_grid.gd" id="1_pp238"]
 [ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa/TileSetCasa.png" id="1_w6fy0"]
@@ -8,6 +8,13 @@
 [ext_resource type="Texture2D" uid="uid://4sf3abv1s8b5" path="res://Resources/Objetos/TileSetObjects4tile.png" id="5_vblwf"]
 [ext_resource type="Texture2D" uid="uid://iy6jrota8k7j" path="res://Resources/Objetos/TileSetObjects6tile.png" id="6_xcis5"]
 [ext_resource type="PackedScene" uid="uid://cwbp4rrjua33k" path="res://Scenes/CharacterNPC.tscn" id="8_ucvjw"]
+
+[sub_resource type="TileSet" id="TileSet_pp238"]
+tile_shape = 1
+tile_layout = 5
+tile_size = Vector2i(32, 16)
+custom_data_layer_0/name = "Blocked"
+custom_data_layer_0/type = 1
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_utu4p"]
 texture = ExtResource("1_w6fy0")
@@ -476,6 +483,7 @@ texture_region_size = Vector2i(32, 16)
 tile_shape = 1
 tile_layout = 5
 tile_size = Vector2i(32, 16)
+physics_layer_0/collision_layer = 1
 custom_data_layer_0/name = "Blocked"
 custom_data_layer_0/type = 1
 sources/0 = SubResource("TileSetAtlasSource_78ttd")
@@ -634,6 +642,8 @@ sources/1 = SubResource("TileSetAtlasSource_pp238")
 size = Vector2(19.5, 16.2992)
 
 [node name="Mundo" type="TileMapLayer"]
+y_sort_enabled = true
+tile_set = SubResource("TileSet_pp238")
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("8_ucvjw")]
 top_level = true
@@ -642,6 +652,8 @@ y_sort_enabled = true
 position = Vector2(102, 76)
 rotation = 0.0175728
 collision_layer = 255
+floor_snap_length = 0.8
+safe_margin = 5.0
 tile_node = NodePath("../Piso")
 block_layers = Array[NodePath]([NodePath("../Objetos"), NodePath("../Pared")])
 dynamic_block_neighborhood = 1
@@ -679,6 +691,7 @@ tile_map_data = PackedByteArray("AAAEAPT/AwAIAAIAAAA=")
 tile_set = SubResource("TileSet_ucvjw")
 
 [node name="Area2D" type="Area2D" parent="."]
+disable_mode = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(64, 75)
