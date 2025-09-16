@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cu43fjfonmu31"
-path="res://.godot/imported/ProfilePicture 128x128 (1).jpg-295e7f54d2e1792d801211c895834037.ctex"
+uid="uid://bf8xseb37ww28"
+path="res://.godot/imported/Dialogues0.jpg-f3e90a5b1c8f0e9cb09464dc63e9339e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Personaje/Animacion/ProfilePicture 128x128 (1).jpg"
-dest_files=["res://.godot/imported/ProfilePicture 128x128 (1).jpg-295e7f54d2e1792d801211c895834037.ctex"]
+source_file="res://Resources/Personaje - Interfaz/Dialogues0.jpg"
+dest_files=["res://.godot/imported/Dialogues0.jpg-f3e90a5b1c8f0e9cb09464dc63e9339e.ctex"]
 
 [params]
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://cd5brqxmccilg"]
 
-[ext_resource type="Texture2D" uid="uid://cu43fjfonmu31" path="res://Resources/Personaje/Animacion/ProfilePicture 128x128 (1).jpg" id="1_f31rt"]
+[ext_resource type="Texture2D" uid="uid://cu43fjfonmu31" path="res://Resources/Personaje - Interfaz/Animacion/ProfilePicture 128x128 (1).jpg" id="1_f31rt"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efote"]
 

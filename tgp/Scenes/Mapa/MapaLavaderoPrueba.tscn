@@ -1,11 +1,11 @@
 [gd_scene load_steps=17 format=4 uid="uid://1r00c5fp0l40"]
 
-[ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa/TileSetCasa.png" id="1_mycmi"]
-[ext_resource type="Texture2D" uid="uid://ejfc0mi486q4" path="res://Resources/Objetos/TileSetObjects1tile.png" id="2_ifive"]
-[ext_resource type="Texture2D" uid="uid://doji3isbl7jhi" path="res://Resources/Objetos/TileSetObjects2tileH.png" id="3_r8gfo"]
-[ext_resource type="Texture2D" uid="uid://vars0r6r8sw1" path="res://Resources/Objetos/TileSetObjects2tileV.png" id="4_kij68"]
-[ext_resource type="Texture2D" uid="uid://4sf3abv1s8b5" path="res://Resources/Objetos/TileSetObjects4tile.png" id="5_n1hls"]
-[ext_resource type="Texture2D" uid="uid://iy6jrota8k7j" path="res://Resources/Objetos/TileSetObjects6tile.png" id="6_kbps2"]
+[ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa - Objetos/TileSetCasa.png" id="1_mycmi"]
+[ext_resource type="Texture2D" uid="uid://ejfc0mi486q4" path="res://Resources/Casa - Objetos/TileSetObjects1tile.png" id="2_ifive"]
+[ext_resource type="Texture2D" uid="uid://doji3isbl7jhi" path="res://Resources/Casa - Objetos/TileSetObjects2tileH.png" id="3_r8gfo"]
+[ext_resource type="Texture2D" uid="uid://vars0r6r8sw1" path="res://Resources/Casa - Objetos/TileSetObjects2tileV.png" id="4_kij68"]
+[ext_resource type="Texture2D" uid="uid://4sf3abv1s8b5" path="res://Resources/Casa - Objetos/TileSetObjects4tile.png" id="5_n1hls"]
+[ext_resource type="Texture2D" uid="uid://iy6jrota8k7j" path="res://Resources/Casa - Objetos/TileSetObjects6tile.png" id="6_kbps2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_utu4p"]
 texture = ExtResource("1_mycmi")

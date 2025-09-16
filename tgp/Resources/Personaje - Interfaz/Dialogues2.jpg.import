@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5po4wc0ofmxs"
-path="res://.godot/imported/TileSetMimiSprite3.png-0d735b480490e4b55608c3995f247b6e.ctex"
+uid="uid://c66q8gor75dk"
+path="res://.godot/imported/Dialogues2.jpg-7c1e86c2563001dd69505c2ce9adfc73.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Personaje/TileSetMimiSprite3.png"
-dest_files=["res://.godot/imported/TileSetMimiSprite3.png-0d735b480490e4b55608c3995f247b6e.ctex"]
+source_file="res://Resources/Personaje - Interfaz/Dialogues2.jpg"
+dest_files=["res://.godot/imported/Dialogues2.jpg-7c1e86c2563001dd69505c2ce9adfc73.ctex"]
 
 [params]
 

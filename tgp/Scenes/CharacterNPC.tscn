@@ -1,8 +1,8 @@
 [gd_scene load_steps=33 format=3 uid="uid://cwbp4rrjua33k"]
 
 [ext_resource type="Script" uid="uid://beuto5n1frgnt" path="res://Scripts/character_npc.gd" id="1_luumf"]
-[ext_resource type="Texture2D" uid="uid://flwq66lfdda0" path="res://Resources/Personaje/TileSetMimiSprite.png" id="1_s2kpd"]
-[ext_resource type="Texture2D" uid="uid://5po4wc0ofmxs" path="res://Resources/Personaje/TileSetMimiSprite3.png" id="3_w72ig"]
+[ext_resource type="Texture2D" uid="uid://flwq66lfdda0" path="res://Resources/Personaje - Interfaz/TileSetMimiSprite.png" id="1_s2kpd"]
+[ext_resource type="Texture2D" uid="uid://5po4wc0ofmxs" path="res://Resources/Personaje - Interfaz/TileSetMimiSprite3.png" id="3_w72ig"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2yubx"]
 atlas = ExtResource("1_s2kpd")

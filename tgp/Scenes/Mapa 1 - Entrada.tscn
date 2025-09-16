@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=4 uid="uid://b1r5hy2a1om5f"]
 
-[ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa/TileSetCasa.png" id="1_kwa2v"]
+[ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa - Objetos/TileSetCasa.png" id="1_kwa2v"]
 
 [sub_resource type="TileSet" id="TileSet_622qf"]
 tile_shape = 1
