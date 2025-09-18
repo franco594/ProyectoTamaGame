@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://bbg0lcs8vm8lt"]
+[gd_scene load_steps=19 format=4 uid="uid://bbg0lcs8vm8lt"]
 
 [ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa - Objetos/TileSetCasa.png" id="1_fuu4s"]
 [ext_resource type="Texture2D" uid="uid://ejfc0mi486q4" path="res://Resources/Casa - Objetos/TileSetObjects1tile.png" id="2_8exo3"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://vars0r6r8sw1" path="res://Resources/Casa - Objetos/TileSetObjects2tileV.png" id="4_ps50m"]
 [ext_resource type="Texture2D" uid="uid://4sf3abv1s8b5" path="res://Resources/Casa - Objetos/TileSetObjects4tile.png" id="5_noi7i"]
 [ext_resource type="Texture2D" uid="uid://iy6jrota8k7j" path="res://Resources/Casa - Objetos/TileSetObjects6tile.png" id="6_0uwk8"]
+[ext_resource type="Script" uid="uid://f8cbmhqktpa3" path="res://Scenes/Mapa/DoorToScene.gd" id="7_8exo3"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_utu4p"]
 texture = ExtResource("1_fuu4s")
@@ -459,6 +460,9 @@ sources/2 = SubResource("TileSetAtlasSource_ttish")
 sources/3 = SubResource("TileSetAtlasSource_qoltc")
 sources/4 = SubResource("TileSetAtlasSource_jqyyr")
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_hdqy8"]
+radius = 5.38516
+
 [node name="Mundo" type="TileMapLayer"]
 
 [node name="Piso" type="TileMapLayer" parent="."]
@@ -472,3 +476,75 @@ tile_set = SubResource("TileSet_oe35b")
 [node name="Objetos" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAANAAMAAAAAAAEAAAAKAAAAAAAEAAYAAAAEAP7/AAAFAAYAAAAHAP7/AAAFAAcAAAAGAP7/AAAFAAcAAAAJAAAAAQAAAAEAAAAJAAMAAQABAAAAAAAIAAIAAAABAAYAAAANAAAAAgADAAAAAAAKAAMAAgAFAAAAAAA=")
 tile_set = SubResource("TileSet_g277f")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+top_level = true
+position = Vector2(-5, 0)
+disable_mode = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(96, 95)
+rotation = -2.30594
+scale = Vector2(6.47814, 3.97207)
+skew = 0.0296707
+polygon = PackedVector2Array(0.673649, -2.06465, -6.42651, 2.67127, -6.78768, 6.45134, 0.287453, 1.40509)
+
+[node name="CollisionShape2D2" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(157, 79)
+rotation = -2.30594
+scale = Vector2(8.17762, 3.95066)
+skew = 0.0296707
+polygon = PackedVector2Array(1.89351, -2.53177, -3.58024, 1.45081, -3.95949, 5.08153, 1.57977, 0.55344)
+
+[node name="CollisionShape2D3" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(180, 136)
+rotation = -2.30594
+scale = Vector2(8.64321, 4.19789)
+skew = 0.0296707
+polygon = PackedVector2Array(0.673649, -2.06465, -0.715888, -0.911426, -1.03527, 2.39007, 0.411226, 1.08836)
+
+[node name="CollisionShape2D4" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(226, 111)
+rotation = -2.30594
+scale = Vector2(7.91775, 4.1604)
+skew = 0.0296707
+polygon = PackedVector2Array(0.673649, -2.06465, -0.715888, -0.911426, -1.03527, 2.39007, 0.411226, 1.08836)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(94, 95)
+offset = Vector2(-10, -25)
+zoom = Vector2(3.5, 3.5)
+
+[node name="DoorToScene" type="Area2D" parent="."]
+top_level = true
+position = Vector2(-5, 0)
+script = ExtResource("7_8exo3")
+target_scene = "uid://1r00c5fp0l40"
+target_spawn_id = "6"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene"]
+position = Vector2(218, 111)
+shape = SubResource("CircleShape2D_hdqy8")
+
+[node name="DoorToScene2" type="Area2D" parent="."]
+top_level = true
+position = Vector2(-5, 0)
+script = ExtResource("7_8exo3")
+target_scene = "uid://c4gky7b1v7hrv"
+target_spawn_id = "4"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene2"]
+position = Vector2(144, 111)
+shape = SubResource("CircleShape2D_hdqy8")
+
+[node name="DoorToScene3" type="Area2D" parent="."]
+top_level = true
+position = Vector2(-5, 0)
+script = ExtResource("7_8exo3")
+target_scene = "uid://cs83f6yew7s0e"
+target_spawn_id = "2"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene3"]
+position = Vector2(78, 53)
+shape = SubResource("CircleShape2D_hdqy8")

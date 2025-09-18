@@ -694,7 +694,8 @@ tile_set = SubResource("TileSet_ucvjw")
 [node name="DoorToScene" type="Area2D" parent="."]
 top_level = true
 script = ExtResource("8_pp238")
-target_scene = "uid://77pqr5hnqb70"
+target_scene = "uid://g5eed6hf83a"
+target_spawn_id = "1"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene"]
 position = Vector2(87, 90)
@@ -703,7 +704,8 @@ shape = SubResource("CircleShape2D_ucvjw")
 [node name="DoorToScene2" type="Area2D" parent="."]
 top_level = true
 script = ExtResource("8_pp238")
-target_scene = "uid://dkeudqbsls178"
+target_scene = "uid://bbg0lcs8vm8lt"
+target_spawn_id = "2"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene2"]
 position = Vector2(149, 84)

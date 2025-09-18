@@ -565,7 +565,7 @@ sources/2 = SubResource("TileSetAtlasSource_ttish")
 sources/3 = SubResource("TileSetAtlasSource_qoltc")
 sources/4 = SubResource("TileSetAtlasSource_jqyyr")
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_rdf8t"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_jd8m6"]
 radius = 5.38516
 
 [node name="Mundo" type="TileMapLayer"]
@@ -592,12 +592,45 @@ position = Vector2(118, 57)
 offset = Vector2(-20, -30)
 zoom = Vector2(3.5, 3.5)
 
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+top_level = true
+disable_mode = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(48, 56)
+rotation = -2.30594
+scale = Vector2(6.47814, 3.97207)
+skew = 0.0296707
+polygon = PackedVector2Array(1.18416, -2.59758, -0.715888, -0.911426, -1.50201, 2.80229, 0.622726, 1.55613)
+
+[node name="CollisionShape2D2" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(122, 16)
+rotation = -2.30594
+scale = Vector2(8.17762, 3.95066)
+skew = 0.0296707
+polygon = PackedVector2Array(0.616686, -1.88816, -3.23532, 1.41483, -3.60075, 5.40322, 0.25534, 2.12806)
+
+[node name="CollisionShape2D3" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(111, 87)
+rotation = -2.30594
+scale = Vector2(8.64321, 4.19789)
+skew = 0.0296707
+polygon = PackedVector2Array(0.81249, -2.28108, -2.7739, 0.287817, -3.26976, 4.39485, 0.45367, 1.13581)
+
+[node name="CollisionShape2D4" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(95, 63)
+rotation = -2.30594
+scale = Vector2(7.91775, 4.1604)
+skew = 0.0296707
+polygon = PackedVector2Array(5.06198, -5.08913, -0.715888, -0.911426, -2.4896, 10.9806, 3.69817, 7.14757)
+
 [node name="DoorToScene" type="Area2D" parent="."]
 top_level = true
 script = ExtResource("7_jd8m6")
-target_scene = "uid://cs83f6yew7s0e"
+target_scene = "uid://g5eed6hf83a"
+target_spawn_id = "5"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene"]
-top_level = true
-position = Vector2(185, 22)
-shape = SubResource("CircleShape2D_rdf8t")
+position = Vector2(187, 19)
+shape = SubResource("CircleShape2D_jd8m6")

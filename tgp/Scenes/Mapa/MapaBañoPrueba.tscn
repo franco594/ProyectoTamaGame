@@ -297,8 +297,56 @@ zoom = Vector2(3.5, 3.5)
 [node name="DoorToScene" type="Area2D" parent="."]
 top_level = true
 script = ExtResource("7_hkiwt")
-target_scene = "uid://cs83f6yew7s0e"
+target_scene = "uid://c4gky7b1v7hrv"
+target_spawn_id = "8"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene"]
 position = Vector2(83, 51)
 shape = SubResource("CircleShape2D_siax1")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+top_level = true
+disable_mode = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(62, 79)
+rotation = -2.30594
+scale = Vector2(6.47814, 3.97207)
+skew = 0.0296707
+polygon = PackedVector2Array(0.866327, -2.39287, -1.15827, -1.33352, -1.83728, 2.65126, 0.287453, 1.40509)
+
+[node name="CollisionShape2D2" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(110, 104)
+rotation = -2.30594
+scale = Vector2(8.17762, 3.95066)
+skew = 0.0296707
+polygon = PackedVector2Array(1.12434, -2.27198, -0.903748, -0.983072, -1.34851, 3.19315, 0.507122, 1.92224)
+
+[node name="CollisionShape2D3" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(156, 61)
+rotation = -2.30594
+scale = Vector2(8.64321, 4.19789)
+skew = 0.0296707
+polygon = PackedVector2Array(0.673649, -2.06465, -2.37251, 0.0771885, -2.87807, 6.04404, 0.117624, 3.02949, 0.590702, 0.445658)
+
+[node name="CollisionShape2D4" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(112, 57)
+rotation = -2.30594
+scale = Vector2(7.91775, 4.1604)
+skew = 0.0296707
+polygon = PackedVector2Array(1.06505, -2.31872, -0.715888, -0.911426, -1.83785, 7.3375, -0.0175142, 5.96938)
+
+[node name="CollisionShape2D5" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(169, 43)
+rotation = -2.30594
+scale = Vector2(7.91775, 4.1604)
+skew = 0.0296707
+polygon = PackedVector2Array(1.06505, -2.31872, -4.73794, 2.15946, -5.60694, 7.01695, 0.523769, 1.82533)
+
+[node name="CollisionShape2D6" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(159, 34)
+rotation = -2.30594
+scale = Vector2(8.17762, 3.95066)
+skew = 0.0296707
+polygon = PackedVector2Array(1.12434, -2.27198, -0.903748, -0.983072, -1.34851, 3.19315, 0.507122, 1.92224)
