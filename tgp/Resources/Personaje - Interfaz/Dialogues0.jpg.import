@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c583t78n3367e"
-path="res://.godot/imported/TileSet.png-f2de21f337cd8334c28611c988360ee6.ctex"
+uid="uid://bf8xseb37ww28"
+path="res://.godot/imported/Dialogues0.jpg-f3e90a5b1c8f0e9cb09464dc63e9339e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Objetos/TileSet.png"
-dest_files=["res://.godot/imported/TileSet.png-f2de21f337cd8334c28611c988360ee6.ctex"]
+source_file="res://Resources/Personaje - Interfaz/Dialogues0.jpg"
+dest_files=["res://.godot/imported/Dialogues0.jpg-f3e90a5b1c8f0e9cb09464dc63e9339e.ctex"]
 
 [params]
 

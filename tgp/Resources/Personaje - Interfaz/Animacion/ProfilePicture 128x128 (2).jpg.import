@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://flwq66lfdda0"
-path="res://.godot/imported/TileSetMimiSprite.png-615379fbcbcbcdb6fdfbf16ed2d6a6ee.ctex"
+uid="uid://vaf5q36gfsyu"
+path="res://.godot/imported/ProfilePicture 128x128 (2).jpg-cceebb58abfb79ccbee1fe30e0d50412.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Personaje/TileSetMimiSprite.png"
-dest_files=["res://.godot/imported/TileSetMimiSprite.png-615379fbcbcbcdb6fdfbf16ed2d6a6ee.ctex"]
+source_file="res://Resources/Personaje - Interfaz/Animacion/ProfilePicture 128x128 (2).jpg"
+dest_files=["res://.godot/imported/ProfilePicture 128x128 (2).jpg-cceebb58abfb79ccbee1fe30e0d50412.ctex"]
 
 [params]
 
