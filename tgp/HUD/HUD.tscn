@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://cd5brqxmccilg"]
+[gd_scene load_steps=8 format=3 uid="uid://cd5brqxmccilg"]
 
 [ext_resource type="Texture2D" uid="uid://cu43fjfonmu31" path="res://Resources/Personaje - Interfaz/Animacion/ProfilePicture 128x128 (1).jpg" id="1_f31rt"]
+[ext_resource type="Texture2D" uid="uid://c66q8gor75dk" path="res://Resources/Personaje - Interfaz/Dialogues2.jpg" id="2_b7ubu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efote"]
 
@@ -78,3 +79,10 @@ text = "
 "
 fit_content = true
 scroll_active = false
+tab_size = 8
+
+[node name="TextureRect" type="TextureRect" parent="Control/MarginContainer/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+texture = ExtResource("2_b7ubu")
+expand_mode = 1
