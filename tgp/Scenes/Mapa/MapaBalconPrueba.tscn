@@ -603,7 +603,7 @@ sources/1 = SubResource("TileSetAtlasSource_pp238")
 [sub_resource type="CircleShape2D" id="CircleShape2D_ucvjw"]
 radius = 5.38516
 
-[node name="Mundo" type="TileMapLayer"]
+[node name="Mundo2" type="TileMapLayer"]
 y_sort_enabled = true
 tile_set = SubResource("TileSet_pp238")
 
