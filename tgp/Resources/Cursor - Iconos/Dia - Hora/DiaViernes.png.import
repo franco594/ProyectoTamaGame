@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://tojvi3o8vynq"
-path="res://.godot/imported/Cursor4.png-e4980ae9b5a9dced0a80fbb2d7f952a3.ctex"
+uid="uid://mbdqy5jg8dyt"
+path="res://.godot/imported/DiaViernes.png-95c45e42343c1cc78629addde9005510.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Cursor - Iconos/Cursor4.png"
-dest_files=["res://.godot/imported/Cursor4.png-e4980ae9b5a9dced0a80fbb2d7f952a3.ctex"]
+source_file="res://Resources/Cursor - Iconos/Dia - Hora/DiaViernes.png"
+dest_files=["res://.godot/imported/DiaViernes.png-95c45e42343c1cc78629addde9005510.ctex"]
 
 [params]
 

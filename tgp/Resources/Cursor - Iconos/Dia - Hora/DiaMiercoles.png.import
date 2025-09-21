@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://krw8nc15ix48"
-path="res://.godot/imported/Icon4.png-fe2e2e3f49ae17b32b98e2fcbcd1919b.ctex"
+uid="uid://b0p0pxms21r03"
+path="res://.godot/imported/DiaMiercoles.png-1b52a1a04b7b0356c2bf6b4b23b553e2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Cursor - Iconos/Icon4.png"
-dest_files=["res://.godot/imported/Icon4.png-fe2e2e3f49ae17b32b98e2fcbcd1919b.ctex"]
+source_file="res://Resources/Cursor - Iconos/Dia - Hora/DiaMiercoles.png"
+dest_files=["res://.godot/imported/DiaMiercoles.png-1b52a1a04b7b0356c2bf6b4b23b553e2.ctex"]
 
 [params]
 
