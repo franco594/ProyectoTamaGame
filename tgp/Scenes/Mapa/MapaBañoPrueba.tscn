@@ -1,12 +1,13 @@
-[gd_scene load_steps=19 format=4 uid="uid://77pqr5hnqb70"]
+[gd_scene load_steps=20 format=4 uid="uid://77pqr5hnqb70"]
 
+[ext_resource type="Script" uid="uid://0wocmoeqiyhn" path="res://Scenes/Mapa/mapa_baño_prueba.gd" id="1_siax1"]
 [ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa - Objetos/TileSetCasa.png" id="1_wu50f"]
 [ext_resource type="Texture2D" uid="uid://ejfc0mi486q4" path="res://Resources/Casa - Objetos/TileSetObjects1tile.png" id="2_hkiwt"]
 [ext_resource type="Texture2D" uid="uid://doji3isbl7jhi" path="res://Resources/Casa - Objetos/TileSetObjects2tileH.png" id="3_siax1"]
 [ext_resource type="Texture2D" uid="uid://vars0r6r8sw1" path="res://Resources/Casa - Objetos/TileSetObjects2tileV.png" id="4_marwi"]
 [ext_resource type="Texture2D" uid="uid://4sf3abv1s8b5" path="res://Resources/Casa - Objetos/TileSetObjects4tile.png" id="5_a60ir"]
 [ext_resource type="Texture2D" uid="uid://iy6jrota8k7j" path="res://Resources/Casa - Objetos/TileSetObjects6tile.png" id="6_o3vel"]
-[ext_resource type="Script" uid="uid://f8cbmhqktpa3" path="res://Scenes/Mapa/DoorToScene.gd" id="7_hkiwt"]
+[ext_resource type="Script" uid="uid://f8cbmhqktpa3" path="res://Scripts/DoorToScene.gd" id="7_hkiwt"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_utu4p"]
 texture = ExtResource("1_wu50f")
@@ -276,6 +277,7 @@ sources/4 = SubResource("TileSetAtlasSource_jqyyr")
 radius = 5.38516
 
 [node name="Mundo" type="TileMapLayer"]
+script = ExtResource("1_siax1")
 
 [node name="Piso" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAAGAAAAAAACAAAAAAAGAAEAAAACAAAAAAAGAAIAAAACAAAAAAAHAAAAAAACAAAAAAAHAAEAAAACAAAAAAAHAAIAAAACAAAAAAAIAAAAAAACAAAAAAAIAAEAAAACAAAAAAAIAAIAAAACAAAAAAAGAAMAAAACAAAAAAAHAAMAAAACAAAAAAAIAAMAAAACAAAAAAAJAAMAAAACAAAAAAAJAAAAAAACAAAAAAAJAAEAAAACAAAAAAAJAAIAAAACAAAAAAAGAP//AAACAAAAAAAHAP//AAACAAAAAAAIAP//AAACAAAAAAAJAP//AAACAAAAAAAGAP7/AAACAAAAAAAHAP7/AAACAAAAAAAIAP7/AAACAAAAAAAJAP7/AAACAAAAAAAGAP3/AAACAAAAAAAHAP3/AAACAAAAAAAIAP3/AAACAAAAAAAJAP3/AAACAAAAAAA=")

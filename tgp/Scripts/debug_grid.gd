@@ -66,6 +66,8 @@ func _draw() -> void:
 					_to_global(center_local + oW),
 				])
 				draw_colored_polygon(pts, col)
+				
+
 
 func _resolve_nodes() -> bool:
 	if _floor_layer == null and _floor_tm == null:

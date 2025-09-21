@@ -1,13 +1,16 @@
-[gd_scene load_steps=25 format=4 uid="uid://cs83f6yew7s0e"]
+[gd_scene load_steps=28 format=4 uid="uid://cs83f6yew7s0e"]
 
+[ext_resource type="Script" uid="uid://bvyh3td0hv7o6" path="res://Scenes/Mapa/mapa_balcon_prueba.gd" id="1_ucvjw"]
 [ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa - Objetos/TileSetCasa.png" id="1_w6fy0"]
 [ext_resource type="Texture2D" uid="uid://ejfc0mi486q4" path="res://Resources/Casa - Objetos/TileSetObjects1tile.png" id="2_mtaff"]
 [ext_resource type="Texture2D" uid="uid://doji3isbl7jhi" path="res://Resources/Casa - Objetos/TileSetObjects2tileH.png" id="3_resc1"]
 [ext_resource type="Texture2D" uid="uid://vars0r6r8sw1" path="res://Resources/Casa - Objetos/TileSetObjects2tileV.png" id="4_qbnvh"]
 [ext_resource type="Texture2D" uid="uid://4sf3abv1s8b5" path="res://Resources/Casa - Objetos/TileSetObjects4tile.png" id="5_vblwf"]
 [ext_resource type="Texture2D" uid="uid://iy6jrota8k7j" path="res://Resources/Casa - Objetos/TileSetObjects6tile.png" id="6_xcis5"]
-[ext_resource type="Script" uid="uid://f8cbmhqktpa3" path="res://Scenes/Mapa/DoorToScene.gd" id="8_pp238"]
+[ext_resource type="Script" uid="uid://f8cbmhqktpa3" path="res://Scripts/DoorToScene.gd" id="8_pp238"]
 [ext_resource type="PackedScene" uid="uid://cwbp4rrjua33k" path="res://Scenes/CharacterNPC.tscn" id="8_ucvjw"]
+[ext_resource type="Script" uid="uid://y1q7vxgonh5j" path="res://Scripts/Door.gd" id="10_ji0er"]
+[ext_resource type="PackedScene" uid="uid://cd5brqxmccilg" path="res://HUD/HUD.tscn" id="11_j5l68"]
 
 [sub_resource type="TileSet" id="TileSet_pp238"]
 tile_shape = 1
@@ -606,6 +609,7 @@ radius = 5.38516
 [node name="Mundo2" type="TileMapLayer"]
 y_sort_enabled = true
 tile_set = SubResource("TileSet_pp238")
+script = ExtResource("1_ucvjw")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 top_level = true
@@ -661,7 +665,7 @@ modulate = Color(1, 1, 1, 0.294118)
 tile_map_data = PackedByteArray("AAAIAAQAAAALAAIAABAKAAIAAAANAAIAAAA=")
 tile_set = SubResource("TileSet_wx4sh")
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("8_ucvjw")]
+[node name="CharacterBody2D" parent="." groups=["npc"] instance=ExtResource("8_ucvjw")]
 top_level = true
 z_index = 2
 y_sort_enabled = true
@@ -671,6 +675,8 @@ scale = Vector2(1.00017, 0.9938)
 collision_layer = 2
 floor_snap_length = 0.8
 safe_margin = 5.0
+current_room_id = "balcon"
+inter_room_wander_chance = 1.0
 tile_node = NodePath("../Piso")
 block_layers = Array[NodePath]([NodePath("../Objetos"), NodePath("../Pared")])
 tiles_per_second = 1.8
@@ -710,3 +716,28 @@ target_spawn_id = "2"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene2"]
 position = Vector2(149, 84)
 shape = SubResource("CircleShape2D_ucvjw")
+
+[node name="Door" type="Area2D" parent="."]
+script = ExtResource("10_ji0er")
+room_id = "balcon"
+entry_cell = Vector2i(8, 3)
+target_room_id = "recreativo"
+target_spawn_cell = Vector2i(3, 3)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Door"]
+position = Vector2(-68, 66)
+polygon = PackedVector2Array(144, 32, 160, 40, 180, 29, 163, 22)
+
+[node name="Door2" type="Area2D" parent="."]
+script = ExtResource("10_ji0er")
+room_id = "balcon"
+entry_cell = Vector2i(9, 3)
+target_room_id = "cocina"
+target_spawn_cell = Vector2i(3, 3)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Door2"]
+position = Vector2(-22, 65)
+polygon = PackedVector2Array(144, 32, 160, 40, 173, 34, 155, 26)
+
+[node name="CanvasLayer" parent="." instance=ExtResource("11_j5l68")]
+visible = false

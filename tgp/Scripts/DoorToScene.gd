@@ -5,8 +5,7 @@ extends Area2D
 @export var target_spawn_id: String = "default"
 
 func _ready() -> void:
-	input_pickable = true  # imprescindible para recibir clicks
-	# conectar el signal "input_event" del Area2D
+	input_pickable = true
 	self.input_event.connect(_on_input_event)
 
 func _on_input_event(viewport, event, shape_idx) -> void:
@@ -14,4 +13,4 @@ func _on_input_event(viewport, event, shape_idx) -> void:
 		if target_scene == "":
 			push_warning("DoorToScene: target_scene sin asignar.")
 			return
-		RoomManager.goto_scene_fade(target_scene, target_spawn_id)
+		await RoomM.goto_scene_fade(target_scene, target_spawn_id)

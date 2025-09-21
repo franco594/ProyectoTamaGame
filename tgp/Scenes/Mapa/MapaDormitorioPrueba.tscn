@@ -1,12 +1,13 @@
-[gd_scene load_steps=21 format=4 uid="uid://dkeudqbsls178"]
+[gd_scene load_steps=22 format=4 uid="uid://dkeudqbsls178"]
 
 [ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa - Objetos/TileSetCasa.png" id="1_1to1m"]
+[ext_resource type="Script" uid="uid://d2uhmm45st2q2" path="res://Scenes/Mapa/mapa_dormitorio_prueba.gd" id="1_rdf8t"]
 [ext_resource type="Texture2D" uid="uid://ejfc0mi486q4" path="res://Resources/Casa - Objetos/TileSetObjects1tile.png" id="2_smf7v"]
 [ext_resource type="Texture2D" uid="uid://doji3isbl7jhi" path="res://Resources/Casa - Objetos/TileSetObjects2tileH.png" id="3_n1gx0"]
 [ext_resource type="Texture2D" uid="uid://vars0r6r8sw1" path="res://Resources/Casa - Objetos/TileSetObjects2tileV.png" id="4_enlbl"]
 [ext_resource type="Texture2D" uid="uid://4sf3abv1s8b5" path="res://Resources/Casa - Objetos/TileSetObjects4tile.png" id="5_lcmcq"]
 [ext_resource type="Texture2D" uid="uid://iy6jrota8k7j" path="res://Resources/Casa - Objetos/TileSetObjects6tile.png" id="6_e76o7"]
-[ext_resource type="Script" uid="uid://f8cbmhqktpa3" path="res://Scenes/Mapa/DoorToScene.gd" id="7_jd8m6"]
+[ext_resource type="Script" uid="uid://f8cbmhqktpa3" path="res://Scripts/DoorToScene.gd" id="7_jd8m6"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_y0qgq"]
 texture = ExtResource("1_1to1m")
@@ -575,6 +576,7 @@ sources/4 = SubResource("TileSetAtlasSource_jqyyr")
 radius = 5.38516
 
 [node name="Mundo" type="TileMapLayer"]
+script = ExtResource("1_rdf8t")
 
 [node name="Pared" type="TileMapLayer" parent="."]
 position = Vector2(0, -1)

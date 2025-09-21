@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://cd5brqxmccilg"]
+[gd_scene load_steps=9 format=3 uid="uid://cd5brqxmccilg"]
 
 [ext_resource type="Texture2D" uid="uid://cu43fjfonmu31" path="res://Resources/Personaje - Interfaz/Animacion/ProfilePicture 128x128 (1).jpg" id="1_f31rt"]
+[ext_resource type="Script" uid="uid://c6bh4lfj22lb0" path="res://HUD/HUD.gd" id="1_ja1d4"]
 [ext_resource type="Texture2D" uid="uid://c66q8gor75dk" path="res://Resources/Personaje - Interfaz/Dialogues2.jpg" id="2_b7ubu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efote"]
@@ -28,6 +29,11 @@ cache/0/16/0/underline_thickness = 0.0
 cache/0/16/0/scale = 1.0
 
 [node name="CanvasLayer" type="CanvasLayer"]
+script = ExtResource("1_ja1d4")
+bar_hunger_path = NodePath("Control/MarginContainer/Panel/Bars/HBoxContainer/BarHungerr")
+bar_energy_path = NodePath("Control/MarginContainer/Panel/Bars/HBoxContainer2/BarEnergy")
+bar_fun_path = NodePath("Control/MarginContainer/Panel/Bars/HBoxContainer3/BarFun")
+lbl_state_path = NodePath("Control/MarginContainer/Panel/Bars/LblState")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -89,3 +95,48 @@ custom_minimum_size = Vector2(180, 180)
 layout_mode = 2
 texture = ExtResource("2_b7ubu")
 expand_mode = 1
+
+[node name="Bars" type="VBoxContainer" parent="Control/MarginContainer/Panel"]
+layout_mode = 0
+offset_left = 202.0
+offset_top = 2.0
+offset_right = 321.0
+offset_bottom = 118.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/MarginContainer/Panel/Bars"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/MarginContainer/Panel/Bars/HBoxContainer"]
+layout_mode = 2
+text = "Hambre:    "
+
+[node name="BarHungerr" type="ProgressBar" parent="Control/MarginContainer/Panel/Bars/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control/MarginContainer/Panel/Bars"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/MarginContainer/Panel/Bars/HBoxContainer2"]
+layout_mode = 2
+text = "Energia:    "
+
+[node name="BarEnergy" type="ProgressBar" parent="Control/MarginContainer/Panel/Bars/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Control/MarginContainer/Panel/Bars"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/MarginContainer/Panel/Bars/HBoxContainer3"]
+layout_mode = 2
+text = "Diversión:    "
+
+[node name="BarFun" type="ProgressBar" parent="Control/MarginContainer/Panel/Bars/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LblState" type="Label" parent="Control/MarginContainer/Panel/Bars"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "\"State:   -\""

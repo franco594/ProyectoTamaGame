@@ -17,12 +17,17 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-RoomManager="*res://Scripts/RoomManager.gd"
 Hud="*res://HUD/HUD.tscn"
+RoomM="*res://Scripts/RoomManager.gd"
 
 [display]
 
 mouse_cursor/custom_image="uid://ca6vsvytsgnvv"
+
+[global_group]
+
+npc=""
+door=""
 
 [layer_names]
 
