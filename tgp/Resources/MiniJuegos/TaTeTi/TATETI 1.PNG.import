@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djaw1fi6ahus2"
-path="res://.godot/imported/MiniGame1.png-a16632b9b761ba954116d02e99fc9306.ctex"
+uid="uid://1v6a3115tem1"
+path="res://.godot/imported/TATETI 1.PNG-27d818680f587ff05a937cd381990876.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Casa - Objetos/MiniGame1.png"
-dest_files=["res://.godot/imported/MiniGame1.png-a16632b9b761ba954116d02e99fc9306.ctex"]
+source_file="res://Resources/MiniJuegos/TaTeTi/TATETI 1.PNG"
+dest_files=["res://.godot/imported/TATETI 1.PNG-27d818680f587ff05a937cd381990876.ctex"]
 
 [params]
 
