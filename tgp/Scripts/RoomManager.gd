@@ -1,142 +1,244 @@
 # RoomManager.gd (autoload)
 extends Node
-class_name RoomManager
 
 @export var fade_duration: float = 0.35
+@export var start_room_id: String = "dormitorio"
 
-# Piso por sala (TileMap o TileMapLayer)
-var rooms_floor: Dictionary = {}         # { room_id: NodePath }
-# Puertas por sala
-var room_doors: Dictionary = {}          # { room_id: Array[Door] }
-# Puntos de actividad por sala
-var room_activities: Dictionary = {}     # { room_id: Array[ActivityPoint] }
+var _room_paths: Dictionary = {}
+var _loaded_rooms: Dictionary = {}
+var _active_room_id: String = ""
+var _npc_room_id: String = ""
+var _room_doors: Dictionary = {}
+var _room_activities: Dictionary = {}
 
 var _is_fading := false
+var _npc_transitioning := false
+
 var _canvas: CanvasLayer
 var _overlay: ColorRect
 
 func _ready() -> void:
 	_canvas = CanvasLayer.new()
-	_canvas.layer = 100
+	_canvas.layer = 200
 	add_child(_canvas)
 
 	_overlay = ColorRect.new()
 	_overlay.color = Color.BLACK
 	_overlay.modulate.a = 0.0
 	_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_overlay.anchor_left = 0.0
-	_overlay.anchor_top = 0.0
-	_overlay.anchor_right = 1.0
-	_overlay.anchor_bottom = 1.0
-	_overlay.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_overlay.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_canvas.add_child(_overlay)
 
-# --- Registro de salas ---
-func register_room(room_id: String, floor_node: Node) -> void:
-	rooms_floor[room_id] = floor_node.get_path()
-	_rebuild_room_doors(room_id)
-	_rebuild_room_activities(room_id)
+	call_deferred("_load_start_room")
 
-func _rebuild_room_doors(room_id: String) -> void:
-	var doors: Array = []
-	for nd in get_tree().get_nodes_in_group("door"):
-		if nd is Door and nd.room_id == room_id:
-			doors.append(nd)
-	room_doors[room_id] = doors
+func _load_start_room() -> void:
+	var room = _ensure_room_loaded(start_room_id)
+	if room != null:
+		_active_room_id = start_room_id
+		_npc_room_id = start_room_id
+		_set_room_visible(room, true)
 
-func _rebuild_room_activities(room_id: String) -> void:
-	var arr: Array = []
-	for nd in get_tree().get_nodes_in_group("activity_point"):
-		if nd is ActivityPoint and nd.room_id == room_id:
-			arr.append(nd)
-	room_activities[room_id] = arr
+		var npc = get_tree().get_first_node_in_group("npc")
+		if npc != null:
+			var floor_node = get_floor(start_room_id)
+			if floor_node != null:
+				npc.ground_layer = null
+				npc.ground_tm = null
+				npc.tile_node = floor_node.get_path()
+				await get_tree().process_frame
+				if npc.has_method("_ensure_tile_refs"):
+					npc._ensure_tile_refs()
+				if npc.has_method("_resolve_block_layers"):
+					npc._resolve_block_layers()
+				npc._current_cell = npc._world_to_cell(npc.global_position)
+				npc.global_position = npc._cell_center_world(npc._current_cell)
+				# NPC visible solo en la habitación inicial
+				npc.visible = true
+				npc.modulate.a = 1.0
 
-func get_floor_node(room_id: String) -> Node:
-	var p: NodePath = rooms_floor.get(room_id, NodePath(""))
-	if p.is_empty():
+# --- Registro ---
+func register_room(room_id: String, scene_path: String) -> void:
+	_room_paths[room_id] = scene_path
+
+func notify_room_ready(room_id: String, root_node: Node) -> void:
+	_loaded_rooms[room_id] = root_node
+	_room_doors.erase(room_id)
+	_room_activities.erase(room_id)
+
+# --- Carga ---
+func _ensure_room_loaded(room_id: String) -> Node:
+	if _loaded_rooms.has(room_id):
+		return _loaded_rooms[room_id]
+	if not _room_paths.has(room_id):
+		push_warning("[RoomManager] room no registrado: %s" % room_id)
 		return null
-	return get_tree().root.get_node_or_null(p)
+	var ps: PackedScene = load(_room_paths[room_id])
+	if ps == null:
+		push_warning("[RoomManager] no se pudo cargar: %s" % _room_paths[room_id])
+		return null
+	var inst: Node = ps.instantiate()
+	get_tree().root.add_child(inst)
+	_loaded_rooms[room_id] = inst
+	_set_room_visible(inst, false)
+	return inst
 
-func get_doors(room_id: String) -> Array:
-	if not room_doors.has(room_id):
-		_rebuild_room_doors(room_id)
-	return room_doors.get(room_id, [])
+# --- Visibilidad ---
+func _set_room_visible(room: Node, vis: bool) -> void:
+	room.process_mode = Node.PROCESS_MODE_INHERIT if vis else Node.PROCESS_MODE_DISABLED
+	if room is CanvasItem:
+		(room as CanvasItem).visible = vis
+	for c in room.get_children():
+		_set_room_visible_recursive(c, vis)
 
-func get_activities(room_id: String) -> Array:
-	if not room_activities.has(room_id):
-		_rebuild_room_activities(room_id)
-	return room_activities.get(room_id, [])
+func _set_room_visible_recursive(node: Node, vis: bool) -> void:
+	if node is CanvasItem:
+		(node as CanvasItem).visible = vis
+	for c in node.get_children():
+		_set_room_visible_recursive(c, vis)
 
-# --- Cambio de sala sin cambiar de escena (teleport dentro del mundo) ---
-func move_npc_to_room(npc: Node, target_room_id: String, spawn_cell: Vector2i) -> void:
-	var floor := get_floor_node(target_room_id)
-	if floor == null:
-		push_warning("[RoomManager] floor no encontrado para room: %s" % target_room_id)
+func _update_npc_visibility() -> void:
+	var npc = get_tree().get_first_node_in_group("npc")
+	if npc == null:
 		return
-	npc.tile_node = floor.get_path()
-	if npc.has_method("_ensure_tile_refs"):
-		npc._ensure_tile_refs()
-	if npc.has_method("_cell_center_world"):
-		var spawn_world: Vector2 = npc._cell_center_world(spawn_cell)
-		npc.global_position = spawn_world
-	if "velocity" in npc:
-		npc.velocity = Vector2.ZERO
-	if "_path_world" in npc:
-		npc._path_world.clear()
-	if "_moving" in npc:
-		npc._moving = false
-	if npc.has_method("_play_idle_anim"):
-		npc._play_idle_anim()
-	if npc.has_signal("room_changed"):
-		npc.emit_signal("room_changed", target_room_id)
+	var should_be_visible: bool = (_npc_room_id == _active_room_id)
+	npc.visible = should_be_visible
+	if should_be_visible:
+		npc.modulate.a = 1.0
 
-# --- Cambio de escena con fade (y spawn del player) ---
-func goto_scene_fade(scene_path: String, spawn_id: String = "default") -> void:
+# --- Jugador cambia de habitación ---
+func change_player_room(target_room_id: String) -> void:
+	if _active_room_id == target_room_id:
+		return
 	if _is_fading:
 		return
 	_is_fading = true
 
 	await _fade_to(1.0, fade_duration)
 
-	var err := get_tree().change_scene_to_file(scene_path)
-	if err != OK:
-		push_warning("No pude cargar: " + scene_path)
-		await _fade_to(0.0, 0.2)
-		_is_fading = false
-		return
+	if _active_room_id != "" and _loaded_rooms.has(_active_room_id):
+		_set_room_visible(_loaded_rooms[_active_room_id], false)
 
-	await get_tree().process_frame
+	_ensure_room_loaded(target_room_id)
+	if _loaded_rooms.has(target_room_id):
+		_set_room_visible(_loaded_rooms[target_room_id], true)
+		_active_room_id = target_room_id
 
-	var player := get_tree().get_first_node_in_group("player") as Node2D
-	if player == null:
-		push_warning("No hay nodo en grupo 'player' en la escena destino.")
-	else:
-		var spawn := _find_spawn(spawn_id)
-		if spawn != null:
-			player.global_position = spawn.global_position
-		else:
-			push_warning("SpawnPoint id='%s' no encontrado; usando el primero disponible." % spawn_id)
-			var fallback := _find_spawn("")
-			if fallback != null:
-				player.global_position = fallback.global_position
+	# Actualizar visibilidad del NPC según habitación activa
+	_update_npc_visibility()
 
 	await _fade_to(0.0, fade_duration)
 	_is_fading = false
 
+# --- NPC cambia de habitación ---
+func move_npc_to_room(npc: Node, target_room_id: String, spawn_cell: Vector2i) -> void:
+	if _npc_transitioning:
+		return
+	_npc_transitioning = true
+
+	# Ocultar NPC inmediatamente
+	npc.visible = false
+	npc.modulate.a = 0.0
+	if npc.has_method("get") and "_tween" in npc:
+		var t = npc._tween
+		if t != null and t.is_valid():
+			t.kill()
+
+	# Asegurarse que la habitación destino esté cargada
+	_ensure_room_loaded(target_room_id)
+
+	# Reasignar piso al NPC
+	var floor_node := get_floor(target_room_id)
+	if floor_node == null:
+		push_warning("[RoomManager] floor no encontrado: %s" % target_room_id)
+		_update_npc_visibility()
+		_npc_transitioning = false
+		return
+
+	npc.ground_layer = null
+	npc.ground_tm = null
+	npc.tile_node = floor_node.get_path()
+
+	await get_tree().process_frame
+
+	if npc.has_method("_ensure_tile_refs"):
+		npc._ensure_tile_refs()
+	if npc.has_method("_resolve_block_layers"):
+		npc._resolve_block_layers()
+
+	npc.global_position = npc._cell_center_world(spawn_cell)
+	npc._current_cell = spawn_cell
+	npc._path_cells.clear()
+	npc._moving = false
+	npc.velocity = Vector2.ZERO
+	_npc_room_id = target_room_id
+
+	if npc.has_method("_play_idle_anim"):
+		npc._play_idle_anim()
+
+	# Mostrar NPC con fade-in solo si el jugador está viendo esa habitación
+	if _active_room_id == target_room_id:
+		npc.visible = true
+		npc.modulate.a = 0.0
+		var tw_in := create_tween()
+		tw_in.tween_property(npc, "modulate:a", 1.0, 0.3)
+		await tw_in.finished
+	else:
+		# El NPC está en otra habitación — invisible
+		npc.visible = false
+		npc.modulate.a = 1.0
+
+	_npc_transitioning = false
+
+	if npc.has_signal("room_changed"):
+		npc.emit_signal("room_changed", target_room_id)
+
+# --- Floor ---
+func get_floor(room_id: String) -> Node:
+	var root: Node = _loaded_rooms.get(room_id, null)
+	if root == null:
+		return null
+	var piso: Node = root.find_child("Piso", true, false)
+	if piso != null:
+		return piso
+	for n in get_tree().get_nodes_in_group("ground"):
+		if root.is_ancestor_of(n):
+			return n
+	return null
+
+# --- Puertas y actividades ---
+func get_doors(room_id: String) -> Array:
+	if not _room_doors.has(room_id):
+		_rebuild_doors(room_id)
+	return _room_doors.get(room_id, [])
+
+func get_activities(room_id: String) -> Array:
+	if not _room_activities.has(room_id):
+		_rebuild_activities(room_id)
+	return _room_activities.get(room_id, [])
+
+func _rebuild_doors(room_id: String) -> void:
+	var doors: Array = []
+	for nd in get_tree().get_nodes_in_group("door"):
+		if "room_id" in nd and nd.room_id == room_id:
+			doors.append(nd)
+	_room_doors[room_id] = doors
+
+func _rebuild_activities(room_id: String) -> void:
+	var arr: Array = []
+	for nd in get_tree().get_nodes_in_group("activity_point"):
+		if "room_id" in nd and nd.room_id == room_id:
+			arr.append(nd)
+	_room_activities[room_id] = arr
+
+func invalidate_room_cache(room_id: String) -> void:
+	_room_doors.erase(room_id)
+	_room_activities.erase(room_id)
+
+# --- Fade de pantalla ---
 func _fade_to(alpha: float, dur: float) -> void:
 	var tw := create_tween()
 	tw.tween_property(_overlay, "modulate:a", alpha, dur)
 	await tw.finished
 
-func _find_spawn(spawn_id: String) -> Node2D:
-	var candidates := get_tree().get_nodes_in_group("spawnpoint")
-	if candidates.is_empty():
-		return null
-	if spawn_id != "":
-		for n in candidates:
-			if n is SpawnPoint and (n as SpawnPoint).id == spawn_id:
-				return n as Node2D
-			if n.has_method("get") and n.get("id") == spawn_id:
-				return n as Node2D
-	return candidates[0] as Node2D
+func goto_scene_fade(scene_path: String, spawn_id: String = "default") -> void:
+	pass

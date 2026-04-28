@@ -296,17 +296,13 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_w72ig"]
-radius = 8.0
+radius = 2.22018
 
 [node name="NPC" type="CharacterBody2D"]
 scale = Vector2(1, 0.988123)
 motion_mode = 1
 script = ExtResource("1_luumf")
 tiles_per_second = 2.0
-acceleration_px = 500.0
-stop_epsilon = 1.5
-bob_amount = 0.4
-dynamic_obstacle_group = ""
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 y_sort_enabled = true
@@ -316,6 +312,7 @@ animation = &"Idle"
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+y_sort_enabled = true
 position = Vector2(1, -4)
 shape = SubResource("CircleShape2D_w72ig")
 

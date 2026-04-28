@@ -109,24 +109,11 @@ func _floor_has(c: Vector2i) -> bool:
 	return _floor_tm.get_cell_source_id(0, c) != -1
 
 func _blocked_cell(c: Vector2i) -> bool:
+	# Chequear custom data "Blocked" en el piso
 	if _floor_layer != null:
 		var td := _floor_layer.get_cell_tile_data(c)
-		if td != null:
-			var val = td.get_custom_data("Blocked")
-			if val is bool and val == true:
-				return true
-
-	for n in _blocks:
-		if n is TileMapLayer:
-			var lyr: TileMapLayer = n
-			if lyr.get_cell_source_id(c) != -1:
-				var td := lyr.get_cell_tile_data(c)
-				if td == null:
-					return true
-				var val = td.get_custom_data("Blocked")
-				if val is bool and val == true:
-					return true
-	return false
+		if td != null and td.get_custom_data("Blocked") == true:
+			return true
 
 	# Chequear block_layers
 	for n in _blocks:

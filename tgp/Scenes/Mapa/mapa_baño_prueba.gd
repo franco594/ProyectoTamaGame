@@ -1,3 +1,4 @@
 extends Node
+
 func _ready() -> void:
-	RoomM.register_room("baño", $Piso) # o $TileMap
+	RoomManager.notify_room_ready("baño", self)

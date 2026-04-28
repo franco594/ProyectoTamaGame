@@ -11,32 +11,6 @@
 [ext_resource type="Script" uid="uid://y1q7vxgonh5j" path="res://Scripts/Door.gd" id="9_hqamn"]
 [ext_resource type="Script" uid="uid://cebwb0wdilixc" path="res://Scripts/ActivityPoint.gd" id="10_ud7qs"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_utu4p"]
-texture = ExtResource("1_06ohx")
-texture_region_size = Vector2i(32, 32)
-3:1/0 = 0
-3:1/0/texture_origin = Vector2i(0, -8)
-2:1/0 = 0
-2:1/0/texture_origin = Vector2i(0, -8)
-2:0/0 = 0
-2:0/0/texture_origin = Vector2i(0, -8)
-1:0/0 = 0
-1:0/0/texture_origin = Vector2i(0, -8)
-0:0/0 = 0
-0:0/0/texture_origin = Vector2i(0, -8)
-1:1/0 = 0
-1:1/0/texture_origin = Vector2i(0, -8)
-0:1/0 = 0
-0:1/0/texture_origin = Vector2i(0, -8)
-3:0/0 = 0
-3:0/0/texture_origin = Vector2i(0, -8)
-
-[sub_resource type="TileSet" id="TileSet_3jbs2"]
-tile_shape = 1
-tile_layout = 5
-tile_size = Vector2i(32, 16)
-sources/0 = SubResource("TileSetAtlasSource_utu4p")
-
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_y0qgq"]
 texture = ExtResource("1_06ohx")
 texture_region_size = Vector2i(32, 96)
@@ -107,6 +81,38 @@ tile_layout = 5
 tile_size = Vector2i(32, 16)
 sources/0 = SubResource("TileSetAtlasSource_y0qgq")
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_utu4p"]
+texture = ExtResource("1_06ohx")
+texture_region_size = Vector2i(32, 32)
+3:1/0 = 0
+3:1/0/texture_origin = Vector2i(0, -8)
+2:1/0 = 0
+2:1/0/texture_origin = Vector2i(0, -8)
+2:0/0 = 0
+2:0/0/texture_origin = Vector2i(0, -8)
+1:0/0 = 0
+1:0/0/texture_origin = Vector2i(0, -8)
+0:0/0 = 0
+0:0/0/texture_origin = Vector2i(0, -8)
+1:1/0 = 0
+1:1/0/texture_origin = Vector2i(0, -8)
+0:1/0 = 0
+0:1/0/texture_origin = Vector2i(0, -8)
+3:0/next_alternative_id = 2
+3:0/0 = 0
+3:0/0/texture_origin = Vector2i(0, -8)
+3:0/1 = 1
+3:0/1/texture_origin = Vector2i(0, -8)
+3:0/1/custom_data_0 = true
+
+[sub_resource type="TileSet" id="TileSet_3jbs2"]
+tile_shape = 1
+tile_layout = 5
+tile_size = Vector2i(32, 16)
+custom_data_layer_0/name = "Blocked"
+custom_data_layer_0/type = 1
+sources/0 = SubResource("TileSetAtlasSource_utu4p")
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_78ttd"]
 texture = ExtResource("2_n7nig")
 texture_region_size = Vector2i(32, 32)
@@ -160,7 +166,7 @@ texture_region_size = Vector2i(32, 32)
 6:1/0/z_index = 4
 7:1/0 = 0
 7:1/0/texture_origin = Vector2i(0, 4)
-7:1/0/z_index = 4
+7:1/0/z_index = 2
 8:1/0 = 0
 8:1/0/texture_origin = Vector2i(0, 4)
 8:1/0/z_index = 4
@@ -184,7 +190,7 @@ texture_region_size = Vector2i(32, 32)
 0:7/0/z_index = 4
 4:7/0 = 0
 4:7/0/texture_origin = Vector2i(0, 8)
-4:7/0/z_index = 4
+4:7/0/z_index = 2
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jlrew"]
 texture = ExtResource("3_gvm4q")
@@ -240,7 +246,7 @@ texture_region_size = Vector2i(32, 64)
 1:0/0/z_index = 5
 2:0/0 = 0
 2:0/0/texture_origin = Vector2i(0, 4)
-2:0/0/z_index = 4
+2:0/0/z_index = 2
 3:0/0 = 0
 3:0/0/texture_origin = Vector2i(0, 4)
 3:0/0/z_index = 5
@@ -252,7 +258,7 @@ texture_region_size = Vector2i(32, 64)
 5:0/0/z_index = 4
 6:0/0 = 0
 6:0/0/texture_origin = Vector2i(0, 20)
-6:0/0/z_index = 4
+6:0/0/z_index = 2
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qoltc"]
 texture = ExtResource("5_uejno")
@@ -338,53 +344,33 @@ sources/4 = SubResource("TileSetAtlasSource_jqyyr")
 [sub_resource type="CircleShape2D" id="CircleShape2D_v2igp"]
 radius = 5.38516
 
-[node name="Mundo" type="TileMapLayer"]
+[node name="Mundo" type="Node2D"]
 script = ExtResource("1_v2igp")
 
-[node name="Piso" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAAEAP7/AAADAAAAAAAEAP//AAADAAAAAAAEAAAAAAADAAAAAAAEAAEAAAADAAAAAAAEAAIAAAADAAAAAAAFAP7/AAADAAAAAAAFAP//AAADAAAAAAAFAAAAAAADAAAAAAAFAAEAAAADAAAAAAAFAAIAAAADAAAAAAAGAP7/AAADAAAAAAAGAP//AAADAAAAAAAGAAAAAAADAAAAAAAGAAEAAAADAAAAAAAGAAIAAAADAAAAAAAHAP7/AAADAAAAAAAHAP//AAADAAAAAAAHAAAAAAADAAAAAAAHAAEAAAADAAAAAAAHAAIAAAADAAAAAAAIAP7/AAADAAAAAAAIAP//AAADAAAAAAAIAAAAAAADAAAAAAAIAAEAAAADAAAAAAAIAAIAAAADAAAAAAAEAP3/AAADAAAAAAAFAP3/AAADAAAAAAAGAP3/AAADAAAAAAAHAP3/AAADAAAAAAAIAP3/AAADAAAAAAAEAAMAAAADAAAAAAAFAAMAAAADAAAAAAAGAAMAAAADAAAAAAAHAAMAAAADAAAAAAAIAAMAAAADAAAAAAAJAAMAAAADAAAAAAAJAP3/AAADAAAAAAAJAP7/AAADAAAAAAAJAP//AAADAAAAAAAJAAAAAAADAAAAAAAJAAEAAAADAAAAAAAJAAIAAAADAAAAAAA=")
-tile_set = SubResource("TileSet_3jbs2")
-
-[node name="Paredes y Puertas" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAAEAAMAAAAeAAEAAAAEAAIAAAAeAAEAAAAEAAEAAAAeAAEAAAAEAAAAAAAeAAEAAAAEAP//AAAeAAEAAAAEAP7/AAAeAAEAAAAEAP3/AAAGAAEAAAAHAP3/AAAeAAEAABAIAP3/AAAeAAEAABAAAP//AAABAAUAAAAAAP7/AAABAAUAAAAAAP3/AAABAAUAAAAAAPz/AAABAAUAAAAAAPv/AAABAAUAAAAAAPr/AAABAAUAAAAFAP3/AAAeAAEAABAGAP3/AAAOAAEAABAKAAIAAAAMAAIAAAAIAAQAAAAMAAIAABAJAP3/AAAeAAEAABA=")
+[node name="Paredes" type="TileMapLayer" parent="."]
+z_index = -2
+tile_map_data = PackedByteArray("AAAEAAMAAAAeAAEAAAAEAAIAAAAeAAEAAAAEAAEAAAAeAAEAAAAEAAAAAAAeAAEAAAAEAP//AAAeAAEAAAAEAP7/AAAeAAEAAAAEAP3/AAAGAAEAAAAHAP3/AAAeAAEAABAIAP3/AAAeAAEAABAAAP//AAABAAUAAAAAAP7/AAABAAUAAAAAAP3/AAABAAUAAAAAAPz/AAABAAUAAAAAAPv/AAABAAUAAAAAAPr/AAABAAUAAAAFAP3/AAAeAAEAABAJAP3/AAAeAAEAABAGAP3/AAAOAAEAABA=")
 tile_set = SubResource("TileSet_oe35b")
 
+[node name="Puertas" type="TileMapLayer" parent="."]
+z_index = 2
+tile_map_data = PackedByteArray("AAAKAAIAAAAMAAIAAAAIAAQAAAAMAAIAABA=")
+tile_set = SubResource("TileSet_oe35b")
+
+[node name="Piso" type="TileMapLayer" parent="."]
+z_index = -1
+tile_map_data = PackedByteArray("AAAEAP7/AAADAAAAAQAEAP//AAADAAAAAQAEAAAAAAADAAAAAQAEAAEAAAADAAAAAAAEAAIAAAADAAAAAAAFAP7/AAADAAAAAAAFAP//AAADAAAAAAAFAAAAAAADAAAAAAAFAAEAAAADAAAAAAAFAAIAAAADAAAAAAAGAP7/AAADAAAAAAAGAP//AAADAAAAAAAGAAAAAAADAAAAAAAGAAEAAAADAAAAAAAGAAIAAAADAAAAAAAHAP7/AAADAAAAAAAHAP//AAADAAAAAAAHAAAAAAADAAAAAAAHAAEAAAADAAAAAAAHAAIAAAADAAAAAAAIAP7/AAADAAAAAAAIAP//AAADAAAAAAAIAAAAAAADAAAAAAAIAAEAAAADAAAAAAAIAAIAAAADAAAAAAAEAP3/AAADAAAAAQAFAP3/AAADAAAAAAAGAP3/AAADAAAAAAAIAP3/AAADAAAAAAAEAAMAAAADAAAAAQAFAAMAAAADAAAAAQAGAAMAAAADAAAAAQAHAAMAAAADAAAAAAAIAAMAAAADAAAAAAAJAAMAAAADAAAAAAAJAP3/AAADAAAAAQAJAP7/AAADAAAAAAAJAP//AAADAAAAAQAJAAAAAAADAAAAAAAJAAEAAAADAAAAAAAJAAIAAAADAAAAAAAHAP3/AAADAAAAAAA=")
+tile_set = SubResource("TileSet_3jbs2")
+
 [node name="Objetos" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAADAPz/AgACAAAAAAAEAAAAAAAHAAEAAAAJAP3/AAAFAAAAAAAGAPv/AAAEAAcAAAAJAP//AAAAAAcAAAAFAAMAAAAAAAMAAAAEAAMAAgAEAAAAAAAGAAMAAgAFAAAAABAEAP7/AgAGAAAAAAAEAP//AgAGAAAAAAA=")
+z_index = -2
+tile_map_data = PackedByteArray("AAADAPz/AgACAAAAAAAEAAAAAAAHAAEAAAAGAPv/AAAEAAcAAAAEAP7/AgAGAAAAAAAEAP//AgAGAAAAAAA=")
 tile_set = SubResource("TileSet_g277f")
+metadata/_edit_lock_ = true
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-top_level = true
-disable_mode = 2
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionPolygon2D" parent="StaticBody2D"]
-position = Vector2(61.9859, 78.6512)
-rotation = -2.30594
-scale = Vector2(6.65565, 3.91208)
-skew = 0.0296707
-polygon = PackedVector2Array(5.55679, -5.43297, -0.744867, -1.44745, -1.03527, 2.39007, 4.87892, -1.74829)
-
-[node name="CollisionShape2D2" type="CollisionPolygon2D" parent="StaticBody2D"]
-position = Vector2(174, 73)
-rotation = -2.30594
-scale = Vector2(8.17762, 3.95066)
-skew = 0.0296707
-polygon = PackedVector2Array(0.965696, -1.89631, -0.665775, -1.54657, -1.09224, 2.50147, 0.493309, 1.56456)
-
-[node name="CollisionShape2D3" type="CollisionPolygon2D" parent="StaticBody2D"]
-position = Vector2(205, 56)
-rotation = -2.30594
-scale = Vector2(8.64321, 4.19789)
-skew = 0.0296707
-polygon = PackedVector2Array(0.673649, -2.06465, -0.715888, -0.911426, -1.03527, 2.39007, 0.411226, 1.08836)
-
-[node name="CollisionShape2D4" type="CollisionPolygon2D" parent="StaticBody2D"]
-position = Vector2(78, 39)
-rotation = -2.30594
-scale = Vector2(7.91775, 4.1604)
-skew = 0.0296707
-polygon = PackedVector2Array(0.673649, -2.06465, -0.715888, -0.911426, -3.04515, 14.785, -1.321, 13.2556)
+[node name="Objetos2" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAJAP3/AAAFAAAAAAAJAP//AAAAAAcAAAAFAAMAAAAAAAMAAAAEAAMAAgAEAAAAAAAGAAMAAgAFAAAAABA=")
+tile_set = SubResource("TileSet_g277f")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(95, 55)
@@ -394,8 +380,7 @@ zoom = Vector2(3.5, 3.5)
 [node name="DoorToScene" type="Area2D" parent="."]
 top_level = true
 script = ExtResource("7_mdr75")
-target_scene = "uid://dkeudqbsls178"
-target_spawn_id = "5"
+target_room_id = "dormitorio"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene"]
 position = Vector2(73, 81)
@@ -404,8 +389,7 @@ shape = SubResource("CircleShape2D_v2igp")
 [node name="DoorToScene2" type="Area2D" parent="."]
 top_level = true
 script = ExtResource("7_mdr75")
-target_scene = "uid://c4gky7b1v7hrv"
-target_spawn_id = "3"
+target_room_id = "comedor"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene2"]
 position = Vector2(148, 81)
@@ -414,22 +398,42 @@ shape = SubResource("CircleShape2D_v2igp")
 [node name="DoorToScene3" type="Area2D" parent="."]
 top_level = true
 script = ExtResource("7_mdr75")
-target_scene = "uid://cs83f6yew7s0e"
-target_spawn_id = "1"
+target_room_id = "balcon"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene3"]
 position = Vector2(155, 9)
 shape = SubResource("CircleShape2D_v2igp")
 
-[node name="Door" type="Area2D" parent="." groups=["doors"]]
+[node name="Door1" type="Area2D" parent="." groups=["doors"]]
 script = ExtResource("9_hqamn")
 room_id = "recreativo"
-entry_cell = Vector2i(6, 3)
-target_room_id = "balcon"
-target_spawn_cell = Vector2i(0, 1)
+entry_cell = Vector2i(8, 3)
+target_room_id = "dormitorio"
+target_spawn_cell = Vector2i(7, -3)
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Door"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Door1"]
 polygon = PackedVector2Array(144, 32, 160, 40, 173, 34, 155, 26)
+
+[node name="Door2" type="Area2D" parent="." groups=["doors"]]
+script = ExtResource("9_hqamn")
+room_id = "recreativo"
+entry_cell = Vector2i(9, 2)
+target_room_id = "comedor"
+target_spawn_cell = Vector2i(4, 2)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Door2"]
+polygon = PackedVector2Array(144, 32, 160, 40, 173, 34, 155, 26)
+
+[node name="Door3" type="Area2D" parent="." groups=["doors"]]
+script = ExtResource("9_hqamn")
+room_id = "recreativo"
+entry_cell = Vector2i(6, -3)
+target_room_id = "balcon"
+target_spawn_cell = Vector2i(8, 3)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Door3"]
+position = Vector2(-22, 65)
+polygon = PackedVector2Array(142, 34, 155, 41, 172, 34, 157, 25)
 
 [node name="Marker2D" type="Marker2D" parent="."]
 script = ExtResource("10_ud7qs")

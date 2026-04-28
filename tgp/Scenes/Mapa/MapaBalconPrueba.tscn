@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=4 uid="uid://cs83f6yew7s0e"]
+[gd_scene load_steps=24 format=4 uid="uid://cs83f6yew7s0e"]
 
 [ext_resource type="Script" uid="uid://bvyh3td0hv7o6" path="res://Scenes/Mapa/mapa_balcon_prueba.gd" id="1_ucvjw"]
 [ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa - Objetos/TileSetCasa.png" id="1_w6fy0"]
@@ -8,42 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://4sf3abv1s8b5" path="res://Resources/Casa - Objetos/TileSetObjects4tile.png" id="5_vblwf"]
 [ext_resource type="Texture2D" uid="uid://iy6jrota8k7j" path="res://Resources/Casa - Objetos/TileSetObjects6tile.png" id="6_xcis5"]
 [ext_resource type="Script" uid="uid://f8cbmhqktpa3" path="res://Scripts/DoorToScene.gd" id="8_pp238"]
-[ext_resource type="PackedScene" uid="uid://cwbp4rrjua33k" path="res://Scenes/CharacterNPC.tscn" id="8_ucvjw"]
-[ext_resource type="Script" uid="uid://y1q7vxgonh5j" path="res://Scripts/Door.gd" id="10_ji0er"]
 [ext_resource type="PackedScene" uid="uid://cd5brqxmccilg" path="res://HUD/HUD.tscn" id="11_j5l68"]
-
-[sub_resource type="TileSet" id="TileSet_pp238"]
-tile_shape = 1
-tile_layout = 5
-tile_size = Vector2i(32, 16)
-custom_data_layer_0/name = "Blocked"
-custom_data_layer_0/type = 1
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_utu4p"]
-texture = ExtResource("1_w6fy0")
-texture_region_size = Vector2i(32, 32)
-3:1/0 = 0
-3:1/0/texture_origin = Vector2i(0, -8)
-2:1/0 = 0
-2:1/0/texture_origin = Vector2i(0, -8)
-2:0/0 = 0
-2:0/0/texture_origin = Vector2i(0, -8)
-1:0/0 = 0
-1:0/0/texture_origin = Vector2i(0, -8)
-0:0/0 = 0
-0:0/0/texture_origin = Vector2i(0, -8)
-1:1/0 = 0
-1:1/0/texture_origin = Vector2i(0, -8)
-0:1/0 = 0
-0:1/0/texture_origin = Vector2i(0, -8)
-3:0/0 = 0
-3:0/0/texture_origin = Vector2i(0, -8)
-
-[sub_resource type="TileSet" id="TileSet_3jbs2"]
-tile_shape = 1
-tile_layout = 5
-tile_size = Vector2i(32, 16)
-sources/0 = SubResource("TileSetAtlasSource_utu4p")
+[ext_resource type="Script" uid="uid://x852fudfnlgh" path="res://Scripts/debug_grid.gd" id="12_axh4o"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_y0qgq"]
 texture = ExtResource("1_w6fy0")
@@ -229,6 +195,38 @@ tile_shape = 1
 tile_layout = 5
 tile_size = Vector2i(32, 16)
 sources/0 = SubResource("TileSetAtlasSource_y0qgq")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_utu4p"]
+texture = ExtResource("1_w6fy0")
+texture_region_size = Vector2i(32, 32)
+3:1/0 = 0
+3:1/0/texture_origin = Vector2i(0, -8)
+2:1/0 = 0
+2:1/0/texture_origin = Vector2i(0, -8)
+2:0/0 = 0
+2:0/0/texture_origin = Vector2i(0, -8)
+1:0/0 = 0
+1:0/0/texture_origin = Vector2i(0, -8)
+0:0/next_alternative_id = 2
+0:0/0 = 0
+0:0/0/texture_origin = Vector2i(0, -8)
+0:0/1 = 1
+0:0/1/texture_origin = Vector2i(0, -8)
+0:0/1/custom_data_0 = true
+1:1/0 = 0
+1:1/0/texture_origin = Vector2i(0, -8)
+0:1/0 = 0
+0:1/0/texture_origin = Vector2i(0, -8)
+3:0/0 = 0
+3:0/0/texture_origin = Vector2i(0, -8)
+
+[sub_resource type="TileSet" id="TileSet_3jbs2"]
+tile_shape = 1
+tile_layout = 5
+tile_size = Vector2i(32, 16)
+custom_data_layer_0/name = "Blocked"
+custom_data_layer_0/type = 1
+sources/0 = SubResource("TileSetAtlasSource_utu4p")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_78ttd"]
 texture = ExtResource("2_mtaff")
@@ -457,207 +455,50 @@ tile_layout = 5
 tile_size = Vector2i(32, 16)
 sources/0 = SubResource("TileSetAtlasSource_srnlx")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pp238"]
-texture = ExtResource("1_w6fy0")
-texture_region_size = Vector2i(32, 16)
-0:0/0 = 0
-1:0/0 = 0
-2:0/0 = 0
-3:0/0 = 0
-3:0/0/custom_data_0 = true
-4:0/0 = 0
-5:0/0 = 0
-6:0/0 = 0
-7:0/0 = 0
-0:1/0 = 0
-1:1/0 = 0
-2:1/0 = 0
-3:1/0 = 0
-4:1/0 = 0
-5:1/0 = 0
-6:1/0 = 0
-7:1/0 = 0
-8:1/0 = 0
-9:1/0 = 0
-10:1/0 = 0
-11:1/0 = 0
-12:1/0 = 0
-0:2/0 = 0
-1:2/0 = 0
-2:2/0 = 0
-3:2/0 = 0
-4:2/0 = 0
-5:2/0 = 0
-6:2/0 = 0
-7:2/0 = 0
-8:2/0 = 0
-9:2/0 = 0
-10:2/0 = 0
-11:2/0 = 0
-12:2/0 = 0
-0:3/0 = 0
-1:3/0 = 0
-2:3/0 = 0
-3:3/0 = 0
-4:3/0 = 0
-5:3/0 = 0
-6:3/0 = 0
-7:3/0 = 0
-8:3/0 = 0
-9:3/0 = 0
-10:3/0 = 0
-11:3/0 = 0
-12:3/0 = 0
-0:4/0 = 0
-1:4/0 = 0
-2:4/0 = 0
-3:4/0 = 0
-4:4/0 = 0
-5:4/0 = 0
-6:4/0 = 0
-7:4/0 = 0
-8:4/0 = 0
-9:4/0 = 0
-10:4/0 = 0
-11:4/0 = 0
-0:5/0 = 0
-1:5/0 = 0
-2:5/0 = 0
-3:5/0 = 0
-0:6/0 = 0
-1:6/0 = 0
-2:6/0 = 0
-3:6/0 = 0
-4:6/0 = 0
-5:6/0 = 0
-6:6/0 = 0
-7:6/0 = 0
-0:7/0 = 0
-1:7/0 = 0
-2:7/0 = 0
-3:7/0 = 0
-4:7/0 = 0
-5:7/0 = 0
-6:7/0 = 0
-7:7/0 = 0
-0:8/0 = 0
-1:8/0 = 0
-2:8/0 = 0
-3:8/0 = 0
-4:8/0 = 0
-5:8/0 = 0
-6:8/0 = 0
-7:8/0 = 0
-4:9/0 = 0
-5:9/0 = 0
-6:9/0 = 0
-7:9/0 = 0
-0:10/0 = 0
-1:10/0 = 0
-2:10/0 = 0
-3:10/0 = 0
-4:10/0 = 0
-5:10/0 = 0
-6:10/0 = 0
-7:10/0 = 0
-0:11/0 = 0
-1:11/0 = 0
-2:11/0 = 0
-3:11/0 = 0
-0:12/0 = 0
-1:12/0 = 0
-2:12/0 = 0
-3:12/0 = 0
-4:12/0 = 0
-5:12/0 = 0
-6:12/0 = 0
-7:12/0 = 0
-8:12/0 = 0
-9:12/0 = 0
-0:13/0 = 0
-1:13/0 = 0
-2:13/0 = 0
-3:13/0 = 0
-4:13/0 = 0
-5:13/0 = 0
-6:13/0 = 0
-7:13/0 = 0
-8:13/0 = 0
-9:13/0 = 0
-0:14/0 = 0
-1:14/0 = 0
-2:14/0 = 0
-3:14/0 = 0
-4:14/0 = 0
-5:14/0 = 0
-6:14/0 = 0
-7:14/0 = 0
-8:14/0 = 0
-9:14/0 = 0
-
-[sub_resource type="TileSet" id="TileSet_ucvjw"]
-tile_shape = 1
-tile_layout = 5
-tile_size = Vector2i(32, 16)
-custom_data_layer_0/name = "Block"
-custom_data_layer_0/type = 1
-sources/1 = SubResource("TileSetAtlasSource_pp238")
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_ucvjw"]
 radius = 5.38516
 
-[node name="Mundo2" type="TileMapLayer"]
+[node name="Balcon" type="Node2D"]
 y_sort_enabled = true
-tile_set = SubResource("TileSet_pp238")
 script = ExtResource("1_ucvjw")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-top_level = true
-disable_mode = 2
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionPolygon2D" parent="StaticBody2D"]
-position = Vector2(62, 79)
-rotation = -2.30594
-scale = Vector2(6.47814, 3.97207)
-skew = 0.0296707
-polygon = PackedVector2Array(0.673649, -2.06465, -0.715888, -0.911426, -1.03527, 2.39007, 0.411226, 1.08836)
-
-[node name="CollisionShape2D2" type="CollisionPolygon2D" parent="StaticBody2D"]
-position = Vector2(157, 79)
-rotation = -2.30594
-scale = Vector2(8.17762, 3.95066)
-skew = 0.0296707
-polygon = PackedVector2Array(0.616686, -1.88816, -0.715888, -0.911426, -1.09224, 2.50147, 0.364184, 1.49741)
-
-[node name="CollisionShape2D3" type="CollisionPolygon2D" parent="StaticBody2D"]
-position = Vector2(111, 87)
-rotation = -2.30594
-scale = Vector2(8.64321, 4.19789)
-skew = 0.0296707
-polygon = PackedVector2Array(0.673649, -2.06465, -0.715888, -0.911426, -1.03527, 2.39007, 0.411226, 1.08836)
-
-[node name="CollisionShape2D4" type="CollisionPolygon2D" parent="StaticBody2D"]
-position = Vector2(95, 63)
-rotation = -2.30594
-scale = Vector2(7.91775, 4.1604)
-skew = 0.0296707
-polygon = PackedVector2Array(0.673649, -2.06465, -0.715888, -0.911426, -1.03527, 2.39007, 0.411226, 1.08836)
-
-[node name="Piso" type="TileMapLayer" parent="."]
-y_sort_enabled = true
-rotation = -0.000992245
-tile_map_data = PackedByteArray("AAAGAAAAAAAAAAAAAAAGAAEAAAAAAAAAAAAGAAIAAAAAAAAAAAAHAAAAAAAAAAAAAAAHAAEAAAAAAAAAAAAHAAIAAAAAAAAAAAAIAAAAAAAAAAAAAAAIAAEAAAAAAAAAAAAIAAIAAAAAAAAAAAAGAAMAAAAAAAAAAAAHAAMAAAAAAAAAAAAIAAMAAAAAAAAAAAAJAAMAAAAAAAAAAAAJAAAAAAAAAAAAAAAJAAEAAAAAAAAAAAAJAAIAAAAAAAAAAAA=")
-tile_set = SubResource("TileSet_3jbs2")
-
 [node name="Pared" type="TileMapLayer" parent="."]
+z_index = -2
+z_as_relative = false
+y_sort_enabled = true
 tile_map_data = PackedByteArray("AAAGAAMAAAAJAAIAAAAGAAIAAAAJAAIAAAAGAAEAAAAJAAIAAAAGAAAAAAAGAAIAAAAHAAAAAAAJAAIAABAIAAAAAAAJAAIAABAJAAAAAAAJAAIAABA=")
 tile_set = SubResource("TileSet_oe35b")
 
-[node name="Objetos" type="TileMapLayer" parent="."]
+[node name="Piso" type="TileMapLayer" parent="."]
+z_index = -1
+z_as_relative = false
+y_sort_enabled = true
+rotation = -0.000992245
+tile_map_data = PackedByteArray("AAAGAAAAAAAAAAAAAAAGAAEAAAAAAAAAAQAGAAIAAAAAAAAAAAAHAAAAAAAAAAAAAAAHAAEAAAAAAAAAAAAHAAIAAAAAAAAAAAAIAAAAAAAAAAAAAAAIAAEAAAAAAAAAAAAIAAIAAAAAAAAAAQAGAAMAAAAAAAAAAQAHAAMAAAAAAAAAAAAIAAMAAAAAAAAAAAAJAAMAAAAAAAAAAAAJAAAAAAAAAAAAAQAJAAEAAAAAAAAAAAAJAAIAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_3jbs2")
+
+[node name="Maceta1" type="TileMapLayer" parent="."]
 z_index = -4
 y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAGAAMAAAADAAAAAAAJAAAAAAAFAAAAAAAIAAIAAAAEAAEAAAAGAAEAAAACAAAAAAA=")
+tile_map_data = PackedByteArray("AAAGAAMAAAADAAAAAAA=")
+tile_set = SubResource("TileSet_g277f")
+
+[node name="Maceta2" type="TileMapLayer" parent="."]
+z_index = -4
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAIAAIAAAAEAAEAAAA=")
+tile_set = SubResource("TileSet_g277f")
+
+[node name="Maceta3" type="TileMapLayer" parent="."]
+z_index = -4
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAGAAEAAAACAAAAAAA=")
+tile_set = SubResource("TileSet_g277f")
+
+[node name="Maceta4" type="TileMapLayer" parent="."]
+z_index = -4
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAAJAAAAAAAFAAAAAAA=")
 tile_set = SubResource("TileSet_g277f")
 
 [node name="Puertas" type="TileMapLayer" parent="."]
@@ -665,43 +506,15 @@ modulate = Color(1, 1, 1, 0.294118)
 tile_map_data = PackedByteArray("AAAIAAQAAAALAAIAABAKAAIAAAANAAIAAAA=")
 tile_set = SubResource("TileSet_wx4sh")
 
-[node name="CharacterBody2D" parent="." groups=["npc"] instance=ExtResource("8_ucvjw")]
-top_level = true
-z_index = 2
-y_sort_enabled = true
-position = Vector2(93, 95)
-rotation = 0.0175728
-scale = Vector2(1.00017, 0.9938)
-collision_layer = 2
-floor_snap_length = 0.8
-safe_margin = 5.0
-current_room_id = "balcon"
-inter_room_wander_chance = 1.0
-tile_node = NodePath("../Piso")
-block_layers = Array[NodePath]([NodePath("../Objetos"), NodePath("../Pared")])
-tiles_per_second = 1.8
-acceleration_px = 600.0
-wander_every = 5.0
-idle_pause_min = 1.0
-idle_pause_max = 2.0
-dynamic_block_neighborhood = 1
-max_slide_bounces = 4
-
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(99, 95)
 offset = Vector2(-10, -25)
 zoom = Vector2(3.5, 3.5)
 
-[node name="HuellaObjetos" type="TileMapLayer" parent="."]
-y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAEAPT/AwAIAAIAAAA=")
-tile_set = SubResource("TileSet_ucvjw")
-
 [node name="DoorToScene" type="Area2D" parent="."]
 top_level = true
 script = ExtResource("8_pp238")
-target_scene = "uid://g5eed6hf83a"
-target_spawn_id = "1"
+target_room_id = "recreativo"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene"]
 position = Vector2(87, 90)
@@ -710,34 +523,16 @@ shape = SubResource("CircleShape2D_ucvjw")
 [node name="DoorToScene2" type="Area2D" parent="."]
 top_level = true
 script = ExtResource("8_pp238")
-target_scene = "uid://bbg0lcs8vm8lt"
-target_spawn_id = "2"
+target_room_id = "cocina"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene2"]
 position = Vector2(149, 84)
 shape = SubResource("CircleShape2D_ucvjw")
 
-[node name="Door" type="Area2D" parent="."]
-script = ExtResource("10_ji0er")
-room_id = "balcon"
-entry_cell = Vector2i(8, 3)
-target_room_id = "recreativo"
-target_spawn_cell = Vector2i(3, 3)
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Door"]
-position = Vector2(-68, 66)
-polygon = PackedVector2Array(144, 32, 160, 40, 180, 29, 163, 22)
-
-[node name="Door2" type="Area2D" parent="."]
-script = ExtResource("10_ji0er")
-room_id = "balcon"
-entry_cell = Vector2i(9, 3)
-target_room_id = "cocina"
-target_spawn_cell = Vector2i(3, 3)
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Door2"]
-position = Vector2(-22, 65)
-polygon = PackedVector2Array(144, 32, 160, 40, 173, 34, 155, 26)
-
 [node name="CanvasLayer" parent="." instance=ExtResource("11_j5l68")]
 visible = false
+
+[node name="DegbugGrid" type="Node2D" parent="."]
+script = ExtResource("12_axh4o")
+floor_node = NodePath("../Piso")
+block_layers = Array[NodePath]([NodePath("../Pared"), NodePath("../Cama")])

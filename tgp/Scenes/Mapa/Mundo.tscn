@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://dfq078w42kv4u"]
+
+[ext_resource type="PackedScene" uid="uid://cwbp4rrjua33k" path="res://Scenes/CharacterNPC.tscn" id="1_yujuy"]
+[ext_resource type="Script" uid="uid://ddsw0inehavv4" path="res://Scenes/Mapa/camera_2d.gd" id="2_tpqpy"]
+
+[node name="Mundo" type="Node2D"]
+
+[node name="CharacterBody2D" parent="." groups=["npc"] instance=ExtResource("1_yujuy")]
+top_level = true
+z_index = 2
+z_as_relative = false
+y_sort_enabled = true
+position = Vector2(158, 83)
+rotation = 0.0175728
+scale = Vector2(1.00017, 0.9938)
+collision_layer = 2
+floor_snap_length = 0.8
+safe_margin = 5.0
+tiles_per_second = 3.0
+tile_node = NodePath("../Piso")
+block_layers = Array[NodePath]([NodePath("../Cama"), NodePath("../Pared")])
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(65, 24)
+zoom = Vector2(3, 3)
+script = ExtResource("2_tpqpy")
