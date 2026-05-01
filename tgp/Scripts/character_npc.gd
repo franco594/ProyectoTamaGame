@@ -5,7 +5,7 @@ signal room_changed(new_room_id)
 
 # ================== EXPORTS ==================
 @export var current_room_id: String = "dormitorio"
-@export var tiles_per_second: float = 4.0
+@export var tiles_per_second: float = 2.5
 @export var tile_node: NodePath
 @export var block_layers: Array[NodePath] = []
 
@@ -45,29 +45,23 @@ var need_weight: Dictionary = {
 }
 
 # ================== DECISION ==================
-# [MEJORA] decide_every ahora está conectado al loop de proceso.
-# El NPC reevalúa su actividad periódicamente, incluso mientras hace wander,
-# para poder interrumpirse si surge una necesidad urgente.
 @export var decide_every: float = 2.0
 var _decide_timer: float = 0.0
-
 var _target_activity = null
 var _interact_timer: float = 0.0
-
-# [MEJORA] Cooldown por actividad: evita que el NPC repita la misma
-# actividad inmediatamente después de terminarla.
 var _activity_cooldowns: Dictionary = {}
 @export var activity_cooldown_duration: float = 10.0
 
 # ================== WANDER ==================
 var _wander_timer: float = 0.0
-
-# [MEJORA] Historial de celdas visitadas recientemente.
+var _wander_committed: bool = false
 var _visited_cells: Array[Vector2i] = []
 const VISITED_HISTORY_SIZE: int = 8
-
-# [MEJORA] Última celda de wander para calcular inercia de dirección.
 var _last_wander_cell: Vector2i = Vector2i.ZERO
+
+# ================== FUMAR ==================
+var _smoke_timer: float = randf_range(15.0, 40.0)
+var _is_smoking: bool = false
 
 # ================== FAILSAFE ==================
 var _stuck_timer: float = 0.0
@@ -100,13 +94,11 @@ func _process(delta: float) -> void:
 	for k: String in needs.keys():
 		needs[k] = clamp(needs[k] + need_decay.get(k, 0.0) * delta, 0.0, 1.0)
 
-	# [MEJORA] Reducir cooldowns de actividades cada frame
 	for key in _activity_cooldowns.keys():
 		_activity_cooldowns[key] -= delta
 		if _activity_cooldowns[key] <= 0.0:
 			_activity_cooldowns.erase(key)
 
-	# [MEJORA] Reevaluar actividad periódicamente
 	if _state == State.IDLE or _state == State.WALK:
 		_decide_timer -= delta
 		if _decide_timer <= 0.0:
@@ -117,7 +109,6 @@ func _process(delta: float) -> void:
 		_interact_timer -= delta
 		if _interact_timer <= 0.0:
 			_apply_activity_effect(_target_activity)
-			# [MEJORA] Registrar cooldown al terminar la actividad
 			var act_id: String = _get_activity_id(_target_activity)
 			_activity_cooldowns[act_id] = activity_cooldown_duration
 			_target_activity = null
@@ -126,68 +117,97 @@ func _process(delta: float) -> void:
 	if not _moving and _path_cells.size() > 0:
 		_step_next_cell()
 
-	if _state == State.IDLE and not _moving and _path_cells.size() == 0:
+	if _state == State.IDLE and not _moving and _path_cells.size() == 0 and not _wander_committed:
 		_wander_timer -= delta
 		if _wander_timer <= 0.0:
-			_wander_timer = randf_range(2.0, 5.0)
+			_wander_timer = 0.0
 			_wander_pick_random_cell()
 
+	if _state == State.IDLE and not _moving and not _is_smoking and not _wander_committed:
+		_smoke_timer -= delta
+		if _smoke_timer <= 0.0:
+			_start_smoking()
+
+	# [FIX] Stuck timer más tolerante (5s) y con wander_timer aleatorio al resetear
 	if _state == State.WALK and not _moving:
 		_stuck_timer += delta
-		if _stuck_timer > 3.0:
+		if _stuck_timer > 5.0:
 			print("[NPC] stuck detectado, reseteando")
 			_stuck_timer = 0.0
 			_path_cells.clear()
+			_wander_committed = false
 			_state = State.IDLE
-			_wander_timer = 0.0
+			_wander_timer = randf_range(1.0, 3.0)
 	else:
 		_stuck_timer = 0.0
+
+# ================== FUMAR ==================
+func _start_smoking() -> void:
+	_is_smoking = true
+	_wander_timer = 999.0
+	var smoke_anim: String = "smoke_%s" % _last_dir
+	var frames: SpriteFrames = anim.sprite_frames
+	if frames != null and frames.has_animation(smoke_anim):
+		_play_anim_safe(smoke_anim)
+	else:
+		_play_anim_safe("smoke")
+	await get_tree().create_timer(randf_range(4.0, 8.0)).timeout
+	_stop_smoking()
+
+func _stop_smoking() -> void:
+	_is_smoking = false
+	_smoke_timer = randf_range(15.0, 40.0)
+	_wander_timer = randf_range(1.0, 3.0)
+	_play_idle_anim()
 
 # ================== WANDER ==================
 func _wander_pick_random_cell() -> void:
 	if not _ensure_tile_refs():
 		return
 
-	# [MEJORA] Vector de inercia desde la última celda de wander
 	var momentum: Vector2i = _current_cell - _last_wander_cell
-
 	var used: Rect2i = _used_rect()
 	var candidates: Array[Vector2i] = []
 	var scores: Array[float] = []
 
-	for y in range(used.position.y, used.position.y + used.size.y):
-		for x in range(used.position.x, used.position.x + used.size.x):
-			var c := Vector2i(x, y)
-			if c == _current_cell:
-				continue
-			if not _cell_has_floor(c):
-				continue
-			if _is_blocked(c):
-				continue
-			var dist: int = abs(c.x - _current_cell.x) + abs(c.y - _current_cell.y)
-			if dist < 2 or dist > 6:
-				continue
-
-			var score: float = 0.0
-
-			# [MEJORA] Bonus de inercia
-			if momentum != Vector2i.ZERO:
-				var to_candidate: Vector2i = c - _current_cell
-				var dot: float = (
-					float(momentum.x * to_candidate.x + momentum.y * to_candidate.y) /
-					(momentum.length() * to_candidate.length() + 0.001)
-				)
-				score += dot * 0.4
-
-			# [MEJORA] Penalizar celdas visitadas recientemente
-			if c in _visited_cells:
-				score -= 0.6
-
-			candidates.append(c)
-			scores.append(score)
+	# [FIX] Rango adaptativo: intenta lejos primero, si no hay candidatos acepta cerca
+	var min_dist: int = 5
+	var max_dist: int = 15
+	for _attempt in range(2):
+		candidates.clear()
+		scores.clear()
+		for y in range(used.position.y, used.position.y + used.size.y):
+			for x in range(used.position.x, used.position.x + used.size.x):
+				var c := Vector2i(x, y)
+				if c == _current_cell:
+					continue
+				if not _cell_has_floor(c):
+					continue
+				if _is_blocked(c):
+					continue
+				var dist: int = abs(c.x - _current_cell.x) + abs(c.y - _current_cell.y)
+				if dist < min_dist or dist > max_dist:
+					continue
+				var score: float = 0.0
+				if momentum != Vector2i.ZERO:
+					var to_candidate: Vector2i = c - _current_cell
+					var dot: float = (
+						float(momentum.x * to_candidate.x + momentum.y * to_candidate.y) /
+						(momentum.length() * to_candidate.length() + 0.001)
+					)
+					score += dot * 0.4
+				if c in _visited_cells:
+					score -= 0.6
+				candidates.append(c)
+				scores.append(score)
+		if not candidates.is_empty():
+			break
+		# Segunda vuelta: rango más permisivo
+		min_dist = 2
+		max_dist = 20
 
 	if candidates.is_empty():
-		_wander_timer = 1.0
+		_wander_timer = 3.0
 		return
 
 	var best_score: float = scores.max()
@@ -199,15 +219,15 @@ func _wander_pick_random_cell() -> void:
 	best_candidates.shuffle()
 	var chosen: Vector2i = best_candidates[0]
 
-	# [MEJORA] Actualizar historial
 	_last_wander_cell = _current_cell
 	_visited_cells.append(_current_cell)
 	if _visited_cells.size() > VISITED_HISTORY_SIZE:
 		_visited_cells.remove_at(0)
 
+	_wander_committed = true
 	go_to_cell(chosen)
 
-# ================== MOVIMIENTO TÁCTICO ==================
+# ================== MOVIMIENTO ==================
 func go_to_cell(target_cell: Vector2i) -> void:
 	if not _ensure_tile_refs():
 		return
@@ -220,8 +240,14 @@ func go_to_cell(target_cell: Vector2i) -> void:
 	if _path_cells.size() > 0 and _path_cells[0] == start:
 		_path_cells.remove_at(0)
 
+	# [FIX] Si el path quedó vacío, no cambiar a WALK
+	if _path_cells.is_empty():
+		_wander_committed = false
+		_wander_timer = 2.0
+		return
+
 	_state = State.WALK
-	if not _moving and _path_cells.size() > 0:
+	if not _moving:
 		_step_next_cell()
 
 func _step_next_cell() -> void:
@@ -239,6 +265,7 @@ func _step_next_cell() -> void:
 		_path_cells.clear()
 		_moving = false
 		_play_idle_anim()
+		_wander_committed = false
 		_state = State.IDLE
 		return
 
@@ -270,21 +297,23 @@ func _on_step_finished() -> void:
 		_on_arrived()
 
 func _on_arrived() -> void:
-	# [MEJORA] Chequear si llegó a la actividad objetivo
 	if _target_activity != null and _current_cell == _target_activity.entry_cell:
+		_wander_committed = false
 		_start_interact(_target_activity)
 		return
 
 	var rm: Node = get_node_or_null("/root/RoomManager")
-	if rm == null or not rm.has_method("get_doors"):
-		_wander_timer = 0.0
-		return
-	var doors = rm.get_doors(current_room_id)
-	for door in doors:
-		if door.entry_cell == _current_cell and not door.locked:
-			_cross_door(door)
-			return
-	_wander_timer = 0.0
+	if rm != null and rm.has_method("get_doors"):
+		var doors = rm.get_doors(current_room_id)
+		for door in doors:
+			if door.entry_cell == _current_cell and not door.locked:
+				_wander_committed = false
+				_is_smoking = false
+				_cross_door(door)
+				return
+
+	_wander_committed = false
+	_wander_timer = randf_range(4.0, 10.0)
 
 # ================== PUERTAS ==================
 func _cross_door(door) -> void:
@@ -294,15 +323,34 @@ func _cross_door(door) -> void:
 
 	if _tween != null and _tween.is_valid():
 		_tween.kill()
-	visible = false
-	modulate.a = 0.0
-	current_room_id = door.target_room_id
+
 	_path_cells.clear()
 	_moving = false
-	_state = State.IDLE
+	_wander_committed = false
+	_is_smoking = false
+	_state = State.TRAVEL
 	velocity = Vector2.ZERO
 
+	# Fade out antes de salir
+	var fade_out: Tween = create_tween()
+	fade_out.tween_property(self, "modulate:a", 0.0, 0.4)
+	await fade_out.finished
+
+	# Cambiar de habitación
+	current_room_id = door.target_room_id
+	modulate.a = 0.0
+	visible = true
 	await rm.move_npc_to_room(self, door.target_room_id, door.target_spawn_cell)
+
+	_state = State.IDLE
+	_play_idle_anim()
+
+	# Fade in al aparecer
+	var fade_in: Tween = create_tween()
+	fade_in.tween_property(self, "modulate:a", 1.0, 0.4)
+	await fade_in.finished
+
+	_wander_timer = randf_range(1.0, 2.0)
 
 # ================== NECESIDADES ==================
 func _try_decide_activity() -> void:
@@ -316,12 +364,9 @@ func _try_decide_activity() -> void:
 	for ap in rm.get_activities(current_room_id):
 		if not ap.is_available(now):
 			continue
-
-		# [MEJORA] Saltar actividades en cooldown
 		var act_id: String = _get_activity_id(ap)
 		if _activity_cooldowns.has(act_id):
 			continue
-
 		var s: float = _score_activity(ap)
 		if s > best_score:
 			best_score = s
@@ -330,12 +375,22 @@ func _try_decide_activity() -> void:
 	if best_ap == null or best_score <= 0.05:
 		return
 
-	# [MEJORA] Solo interrumpir si supera por margen significativo
+	if _wander_committed:
+		if best_score < 0.4:
+			return
+
+	if _is_smoking:
+		return
+
+	if _state == State.TRAVEL:
+		return
+
 	if _state == State.INTERACT and _target_activity != null:
 		var current_score: float = _score_activity(_target_activity)
 		if best_score < current_score + 0.15:
 			return
 
+	_wander_committed = false
 	_target_activity = best_ap
 	go_to_cell(best_ap.entry_cell)
 	_state = State.WALK
@@ -348,11 +403,8 @@ func _score_activity(ap) -> float:
 		var delta: float = -float(ap.need_effect.get(need_name, 0.0))
 		score += deficit * weight * delta
 	score += ap.priority_bias
-
-	# [MEJORA] Penalización por distancia Manhattan
 	var dist: int = abs(ap.entry_cell.x - _current_cell.x) + abs(ap.entry_cell.y - _current_cell.y)
 	score -= dist * 0.02
-
 	return score
 
 func _apply_activity_effect(ap) -> void:
@@ -364,7 +416,6 @@ func _start_interact(ap) -> void:
 	_interact_timer = ap.duration
 	_play_idle_anim()
 
-# [MEJORA] ID único por actividad para el sistema de cooldowns
 func _get_activity_id(ap) -> String:
 	var cell_str: String = "%d_%d" % [ap.entry_cell.x, ap.entry_cell.y]
 	var name_str: String = ap.get("activity_name") if ap.get("activity_name") != null else str(ap.get_instance_id())
@@ -519,7 +570,11 @@ func _play_walk_anim(move_vec: Vector2) -> void:
 			best_dot = dot
 			best = names[i]
 	_last_dir = best
-	_play_anim_safe("walk_%s" % best)
+	var anim_name: String = "walk_%s" % best
+	if anim.animation != anim_name:
+		var current_frame: int = anim.frame
+		anim.play(anim_name)
+		anim.frame = current_frame % anim.sprite_frames.get_frame_count(anim_name)
 
 func _play_idle_anim() -> void:
 	if anim == null:

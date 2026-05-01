@@ -16,9 +16,6 @@ scale = Vector2(1.00017, 0.9938)
 collision_layer = 2
 floor_snap_length = 0.8
 safe_margin = 5.0
-tiles_per_second = 3.0
-tile_node = NodePath("../Piso")
-block_layers = Array[NodePath]([NodePath("../Cama"), NodePath("../Pared")])
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(65, 24)
