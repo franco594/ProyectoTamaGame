@@ -349,6 +349,11 @@ animations = [{
 "name": &"sit_sofa",
 "speed": 3.0
 }, {
+"frames": [],
+"loop": true,
+"name": &"sit_sofa2",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_4be7q")
@@ -655,9 +660,8 @@ tiles_per_second = 2.0
 y_sort_enabled = true
 position = Vector2(-16, -63)
 sprite_frames = SubResource("SpriteFrames_yswcl")
-animation = &"smoking_outfit_SE"
-frame = 14
-frame_progress = 0.919618
+animation = &"smoking_outfit_SW"
+frame_progress = 0.950944
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

@@ -477,7 +477,7 @@ tile_map_data = PackedByteArray("AAABAPv/AAAEAAAAAAAFAPv/AAAIAAAAABAFAAEAAAAKAAI
 tile_set = SubResource("TileSet_uoubr")
 
 [node name="Objetos" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAABAPv/AAAGAAAAABAGAPv/AAAHAAEAAAABAAAAAAAHAAEAAAACAPv/AAAEAAEAAAADAPv/AAAGAAEAAAAAAPz/AgAFAAAAAAAGAAAAAgABAAAAAAA=")
+tile_map_data = PackedByteArray("AAABAPv/AAAGAAAAABAGAPv/AAAHAAEAAAABAAAAAAAHAAEAAAACAPv/AAAEAAEAAAADAPv/AAAGAAEAAAAAAPz/AgAFAAAAAAAGAAAAAgABAAAAAAADAPz/AwABAAAAAAA=")
 tile_set = SubResource("TileSet_ao78g")
 
 [node name="Camera2D" type="Camera2D" parent="."]
