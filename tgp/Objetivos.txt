@@ -9,3 +9,4 @@ Fran:
 Fer:
 - Hacer animaciones de personaje
 - Hacer el icono del celu y las apps
+- Sprites de outfits
