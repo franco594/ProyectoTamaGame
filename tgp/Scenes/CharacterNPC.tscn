@@ -659,9 +659,7 @@ script = ExtResource("1_luumf")
 y_sort_enabled = true
 position = Vector2(-16, -63)
 sprite_frames = SubResource("SpriteFrames_yswcl")
-animation = &"walk_SW"
-frame = 3
-frame_progress = 1.0
+animation = &"sit_sofa2"
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

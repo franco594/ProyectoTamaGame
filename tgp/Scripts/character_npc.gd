@@ -28,21 +28,10 @@ enum State { IDLE, WALK, INTERACT, TRAVEL }
 var _state: State = State.IDLE
 
 # ================== NECESIDADES ==================
-var needs: Dictionary = {
-	"hunger": 0.20,
-	"energy": 0.10,
-	"fun":    0.35
-}
-var need_decay: Dictionary = {
-	"hunger": 0.005,
-	"energy": 0.003,
-	"fun":    0.004
-}
-var need_weight: Dictionary = {
-	"hunger": 1.0,
-	"energy": 0.9,
-	"fun":    0.7
-}
+# [FIX] Declaradas vacías, se inicializan en _ready()
+var needs: Dictionary = {}
+var need_decay: Dictionary = {}
+var need_weight: Dictionary = {}
 
 # ================== DECISION ==================
 @export var decide_every: float = 2.0
@@ -60,7 +49,8 @@ const VISITED_HISTORY_SIZE: int = 8
 var _last_wander_cell: Vector2i = Vector2i.ZERO
 
 # ================== FUMAR ==================
-var _smoke_timer: float = randf_range(15.0, 40.0)
+# [FIX] randf_range fuera de una función no es confiable, se inicializa en _ready()
+var _smoke_timer: float = 0.0
 var _is_smoking: bool = false
 
 # ================== FAILSAFE ==================
@@ -73,6 +63,25 @@ const DIRS4: Array[Vector2i] = [
 
 # ================== READY ==================
 func _ready() -> void:
+	# [FIX] Inicializar necesidades aquí para que tengan valores reales
+	needs = {
+		"hunger": 0.20,
+		"energy": 0.10,
+		"fun":    0.35
+	}
+	need_decay = {
+		"hunger": 0.005,
+		"energy": 0.003,
+		"fun":    0.004
+	}
+	need_weight = {
+		"hunger": 1.0,
+		"energy": 0.9,
+		"fun":    0.7
+	}
+	# [FIX] randf_range solo funciona correctamente dentro de funciones
+	_smoke_timer = randf_range(15.0, 40.0)
+
 	_ensure_tile_refs()
 	_resolve_block_layers()
 	await get_tree().process_frame
@@ -128,7 +137,6 @@ func _process(delta: float) -> void:
 		if _smoke_timer <= 0.0:
 			_start_smoking()
 
-	# [FIX] Stuck timer más tolerante (5s) y con wander_timer aleatorio al resetear
 	if _state == State.WALK and not _moving:
 		_stuck_timer += delta
 		if _stuck_timer > 5.0:
@@ -170,7 +178,6 @@ func _wander_pick_random_cell() -> void:
 	var candidates: Array[Vector2i] = []
 	var scores: Array[float] = []
 
-	# [FIX] Rango adaptativo: intenta lejos primero, si no hay candidatos acepta cerca
 	var min_dist: int = 5
 	var max_dist: int = 15
 	for _attempt in range(2):
@@ -202,7 +209,6 @@ func _wander_pick_random_cell() -> void:
 				scores.append(score)
 		if not candidates.is_empty():
 			break
-		# Segunda vuelta: rango más permisivo
 		min_dist = 2
 		max_dist = 20
 
@@ -240,7 +246,6 @@ func go_to_cell(target_cell: Vector2i) -> void:
 	if _path_cells.size() > 0 and _path_cells[0] == start:
 		_path_cells.remove_at(0)
 
-	# [FIX] Si el path quedó vacío, no cambiar a WALK
 	if _path_cells.is_empty():
 		_wander_committed = false
 		_wander_timer = 2.0
@@ -331,12 +336,10 @@ func _cross_door(door) -> void:
 	_state = State.TRAVEL
 	velocity = Vector2.ZERO
 
-	# Fade out antes de salir
 	var fade_out: Tween = create_tween()
 	fade_out.tween_property(self, "modulate:a", 0.0, 0.4)
 	await fade_out.finished
 
-	# Cambiar de habitación
 	current_room_id = door.target_room_id
 	modulate.a = 0.0
 	visible = true
@@ -345,7 +348,6 @@ func _cross_door(door) -> void:
 	_state = State.IDLE
 	_play_idle_anim()
 
-	# Fade in al aparecer
 	var fade_in: Tween = create_tween()
 	fade_in.tween_property(self, "modulate:a", 1.0, 0.4)
 	await fade_in.finished

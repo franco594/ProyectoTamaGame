@@ -1,0 +1,11 @@
+Fran:
+
+- Conectar barras de estado del HUD con el juego.
+- Modificar HUD con icono celular, día y Hora.
+- Implementar Hora en el HUD.
+- Verificar que todas las puertas funcionen bien.
+
+
+Fer:
+- Hacer animaciones de personaje
+- Hacer el icono del celu y las apps

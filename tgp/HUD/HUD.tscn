@@ -1,8 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://cd5brqxmccilg"]
+[gd_scene load_steps=14 format=3 uid="uid://cd5brqxmccilg"]
 
 [ext_resource type="Script" uid="uid://c6bh4lfj22lb0" path="res://HUD/HUD.gd" id="1_ja1d4"]
-[ext_resource type="Texture2D" uid="uid://c66q8gor75dk" path="res://Resources/Personaje - Interfaz/Dialogues2.jpg" id="2_b7ubu"]
 [ext_resource type="Texture2D" uid="uid://dbyoe1wb04x4e" path="res://Resources/Personaje - Interfaz/Profile_Pictures/Mimi (Mimo) 0.PNG" id="2_ja1d4"]
+[ext_resource type="Texture2D" uid="uid://cwupbmpcnd5i2" path="res://Resources/Cursor - Iconos/Icon1.png" id="3_ja1d4"]
+[ext_resource type="Texture2D" uid="uid://clyg167fmnvio" path="res://Resources/Cursor - Iconos/Icon2.png" id="3_njmlf"]
+[ext_resource type="Texture2D" uid="uid://dng5qacx4htes" path="res://Resources/Cursor - Iconos/Icon3.png" id="5_lkt0t"]
+[ext_resource type="Texture2D" uid="uid://bo6ul3kmre310" path="res://Resources/Cursor - Iconos/Mapa.png" id="6_6i5cd"]
+[ext_resource type="Texture2D" uid="uid://cubxs1p8d5805" path="res://Resources/Cursor - Iconos/Dia - Hora/Hora.png" id="7_lkt0t"]
+[ext_resource type="Texture2D" uid="uid://b0p0pxms21r03" path="res://Resources/Cursor - Iconos/Dia - Hora/DiaMiercoles.png" id="8_6i5cd"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efote"]
 
@@ -89,12 +94,6 @@ fit_content = true
 scroll_active = false
 tab_size = 8
 
-[node name="TextureRect" type="TextureRect" parent="Control/MarginContainer/Panel/VBoxContainer"]
-custom_minimum_size = Vector2(180, 180)
-layout_mode = 2
-texture = ExtResource("2_b7ubu")
-expand_mode = 1
-
 [node name="Bars" type="VBoxContainer" parent="Control/MarginContainer/Panel"]
 layout_mode = 0
 offset_left = 202.0
@@ -139,3 +138,62 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "\"State:   -\""
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control/MarginContainer/Panel"]
+layout_mode = 0
+offset_left = 990.0
+offset_top = 8.0
+offset_right = 1111.0
+offset_bottom = 38.0
+alignment = 1
+
+[node name="TextureButton2" type="TextureButton" parent="Control/MarginContainer/Panel/HBoxContainer2"]
+layout_mode = 2
+texture_normal = ExtResource("3_njmlf")
+stretch_mode = 0
+
+[node name="TextureButton" type="TextureButton" parent="Control/MarginContainer/Panel/HBoxContainer2"]
+layout_mode = 2
+texture_normal = ExtResource("3_ja1d4")
+stretch_mode = 0
+
+[node name="TextureButton3" type="TextureButton" parent="Control/MarginContainer/Panel/HBoxContainer2"]
+layout_mode = 2
+texture_normal = ExtResource("5_lkt0t")
+stretch_mode = 0
+
+[node name="TextureButton4" type="TextureButton" parent="Control/MarginContainer/Panel/HBoxContainer2"]
+layout_mode = 2
+texture_normal = ExtResource("6_6i5cd")
+stretch_mode = 0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Control/MarginContainer/Panel"]
+custom_minimum_size = Vector2(100, 0)
+offset_left = 1015.0
+offset_top = 60.0
+offset_right = 1115.0
+offset_bottom = 114.0
+theme = SubResource("Theme_k5de2")
+theme_override_constants/separation = 12
+
+[node name="PanelContainer" type="PanelContainer" parent="Control/MarginContainer/Panel/VBoxContainer2"]
+layout_mode = 2
+theme = SubResource("Theme_efote")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/MarginContainer/Panel/VBoxContainer2/PanelContainer"]
+layout_mode = 2
+theme_override_fonts/normal_font = SubResource("FontFile_vow1y")
+text = "
+
+"
+fit_content = true
+scroll_active = false
+tab_size = 8
+
+[node name="Hora" type="Sprite2D" parent="Control/MarginContainer/Panel/VBoxContainer2/PanelContainer"]
+position = Vector2(-70, -35)
+texture = ExtResource("7_lkt0t")
+
+[node name="DiaMiercoles" type="Sprite2D" parent="."]
+position = Vector2(888, 41)
+texture = ExtResource("8_6i5cd")
