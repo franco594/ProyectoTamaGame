@@ -63,6 +63,8 @@ const DIRS4: Array[Vector2i] = [
 
 # ================== READY ==================
 func _ready() -> void:
+	
+	
 	# [FIX] Inicializar necesidades aquí para que tengan valores reales
 	needs = {
 		"hunger": 0.20,

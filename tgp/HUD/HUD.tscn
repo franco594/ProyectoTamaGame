@@ -1,13 +1,16 @@
-[gd_scene load_steps=14 format=3 uid="uid://cd5brqxmccilg"]
+[gd_scene load_steps=17 format=3 uid="uid://cd5brqxmccilg"]
 
 [ext_resource type="Script" uid="uid://c6bh4lfj22lb0" path="res://HUD/HUD.gd" id="1_ja1d4"]
 [ext_resource type="Texture2D" uid="uid://dbyoe1wb04x4e" path="res://Resources/Personaje - Interfaz/Profile_Pictures/Mimi (Mimo) 0.PNG" id="2_ja1d4"]
-[ext_resource type="Texture2D" uid="uid://cwupbmpcnd5i2" path="res://Resources/Cursor - Iconos/Icon1.png" id="3_ja1d4"]
-[ext_resource type="Texture2D" uid="uid://clyg167fmnvio" path="res://Resources/Cursor - Iconos/Icon2.png" id="3_njmlf"]
-[ext_resource type="Texture2D" uid="uid://dng5qacx4htes" path="res://Resources/Cursor - Iconos/Icon3.png" id="5_lkt0t"]
-[ext_resource type="Texture2D" uid="uid://bo6ul3kmre310" path="res://Resources/Cursor - Iconos/Mapa.png" id="6_6i5cd"]
-[ext_resource type="Texture2D" uid="uid://cubxs1p8d5805" path="res://Resources/Cursor - Iconos/Dia - Hora/Hora.png" id="7_lkt0t"]
+[ext_resource type="Texture2D" uid="uid://rv17heos08e7" path="res://Resources/Telefono/Telefono-Icon.PNG" id="3_aa5tu"]
+[ext_resource type="Texture2D" uid="uid://dh63anio3b8lv" path="res://Resources/Cursor - Iconos/Dia - Hora/DiaLunes.png" id="4_fwgky"]
+[ext_resource type="Texture2D" uid="uid://dm0rt0k35vg27" path="res://Resources/Cursor - Iconos/Dia - Hora/DiaMartes.png" id="5_7odlb"]
+[ext_resource type="FontFile" uid="uid://dm18uc17xr8jc" path="res://Resources/Fonts/DS-DIGIT.TTF" id="5_njmlf"]
+[ext_resource type="Texture2D" uid="uid://dhmvi35g65c7l" path="res://Resources/Cursor - Iconos/Dia - Hora/DiaJueves.png" id="7_huo54"]
 [ext_resource type="Texture2D" uid="uid://b0p0pxms21r03" path="res://Resources/Cursor - Iconos/Dia - Hora/DiaMiercoles.png" id="8_6i5cd"]
+[ext_resource type="Texture2D" uid="uid://mbdqy5jg8dyt" path="res://Resources/Cursor - Iconos/Dia - Hora/DiaViernes.png" id="8_ktoim"]
+[ext_resource type="Texture2D" uid="uid://bpurag8mlr7bm" path="res://Resources/Cursor - Iconos/Dia - Hora/DiaSabado.png" id="9_33tmu"]
+[ext_resource type="Texture2D" uid="uid://cqrkrt2qcucqv" path="res://Resources/Cursor - Iconos/Dia - Hora/DiaDomingo.png" id="10_kcgbh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efote"]
 
@@ -38,6 +41,14 @@ cache/0/16/0/scale = 1.0
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_ja1d4")
+bar_hunger_path = NodePath("Control/MarginContainer/Panel/Bars/HBoxContainer/BarHungerr")
+bar_energy_path = NodePath("Control/MarginContainer/Panel/Bars/HBoxContainer2/BarEnergy")
+bar_fun_path = NodePath("Control/MarginContainer/Panel/Bars/HBoxContainer3/BarFun")
+lbl_state_path = NodePath("Control/MarginContainer/Panel/Bars/LblState")
+lbl_clock_path = NodePath("Control/LblTime")
+lbl_day_path = NodePath("Control/MarginContainer/Panel/VBoxContainer3/LblDay")
+lbl_season_path = NodePath("Control/MarginContainer/Panel/VBoxContainer3/LblSeason")
+day_buttons = Array[NodePath]([NodePath("Control/MarginContainer/Panel/Control/Button"), NodePath("Control/MarginContainer/Panel/Control/Button2"), NodePath("Control/MarginContainer/Panel/Control/Button3"), NodePath("Control/MarginContainer/Panel/Control/Button4"), NodePath("Control/MarginContainer/Panel/Control/Button5"), NodePath("Control/MarginContainer/Panel/Control/Button6"), NodePath("Control/MarginContainer/Panel/Control/Button7")])
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -141,59 +152,112 @@ text = "\"State:   -\""
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Control/MarginContainer/Panel"]
 layout_mode = 0
-offset_left = 990.0
-offset_top = 8.0
-offset_right = 1111.0
-offset_bottom = 38.0
+offset_left = 1073.0
+offset_top = 50.0
+offset_right = 1093.0
+offset_bottom = 84.0
+scale = Vector2(2.12036, 2.13019)
 alignment = 1
-
-[node name="TextureButton2" type="TextureButton" parent="Control/MarginContainer/Panel/HBoxContainer2"]
-layout_mode = 2
-texture_normal = ExtResource("3_njmlf")
-stretch_mode = 0
-
-[node name="TextureButton" type="TextureButton" parent="Control/MarginContainer/Panel/HBoxContainer2"]
-layout_mode = 2
-texture_normal = ExtResource("3_ja1d4")
-stretch_mode = 0
-
-[node name="TextureButton3" type="TextureButton" parent="Control/MarginContainer/Panel/HBoxContainer2"]
-layout_mode = 2
-texture_normal = ExtResource("5_lkt0t")
-stretch_mode = 0
 
 [node name="TextureButton4" type="TextureButton" parent="Control/MarginContainer/Panel/HBoxContainer2"]
 layout_mode = 2
-texture_normal = ExtResource("6_6i5cd")
-stretch_mode = 0
+texture_normal = ExtResource("3_aa5tu")
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Control/MarginContainer/Panel"]
+[node name="VBoxContainer3" type="HBoxContainer" parent="Control/MarginContainer/Panel"]
 custom_minimum_size = Vector2(100, 0)
-offset_left = 1015.0
-offset_top = 60.0
-offset_right = 1115.0
-offset_bottom = 114.0
+offset_left = 854.0
+offset_top = 1.0
+offset_right = 954.0
+offset_bottom = 26.0
+scale = Vector2(0.995984, 1.31813)
 theme = SubResource("Theme_k5de2")
 theme_override_constants/separation = 12
 
-[node name="PanelContainer" type="PanelContainer" parent="Control/MarginContainer/Panel/VBoxContainer2"]
+[node name="LblSeason" type="Label" parent="Control/MarginContainer/Panel/VBoxContainer3"]
 layout_mode = 2
-theme = SubResource("Theme_efote")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Control/MarginContainer/Panel/VBoxContainer2/PanelContainer"]
+[node name="LblDay" type="Label" parent="Control/MarginContainer/Panel/VBoxContainer3"]
 layout_mode = 2
-theme_override_fonts/normal_font = SubResource("FontFile_vow1y")
-text = "
 
-"
-fit_content = true
-scroll_active = false
-tab_size = 8
+[node name="Control" type="Control" parent="Control/MarginContainer/Panel"]
+layout_mode = 2
+anchors_preset = 0
+offset_left = 887.0
+offset_top = 59.0
+offset_right = 987.0
+offset_bottom = 109.0
+scale = Vector2(0.823286, 0.782113)
 
-[node name="Hora" type="Sprite2D" parent="Control/MarginContainer/Panel/VBoxContainer2/PanelContainer"]
-position = Vector2(-70, -35)
-texture = ExtResource("7_lkt0t")
+[node name="Button" type="TextureRect" parent="Control/MarginContainer/Panel/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.703426, 0.815723)
+texture = ExtResource("4_fwgky")
 
-[node name="DiaMiercoles" type="Sprite2D" parent="."]
-position = Vector2(888, 41)
+[node name="Button2" type="TextureRect" parent="Control/MarginContainer/Panel/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_7odlb")
+
+[node name="Button3" type="TextureRect" parent="Control/MarginContainer/Panel/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("8_6i5cd")
+
+[node name="Button4" type="TextureRect" parent="Control/MarginContainer/Panel/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_huo54")
+
+[node name="Button5" type="TextureRect" parent="Control/MarginContainer/Panel/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_ktoim")
+
+[node name="Button6" type="TextureRect" parent="Control/MarginContainer/Panel/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_33tmu")
+
+[node name="Button7" type="TextureRect" parent="Control/MarginContainer/Panel/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("10_kcgbh")
+
+[node name="LblTime" type="Label" parent="Control"]
+layout_mode = 2
+offset_left = 1067.0
+offset_top = 14.0
+offset_right = 1133.0
+offset_bottom = 31.0
+scale = Vector2(1.88898, 2.22007)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("5_njmlf")

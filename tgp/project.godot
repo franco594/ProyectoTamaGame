@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 Hud="*res://HUD/HUD.tscn"
 RoomManager="*res://Scripts/RoomManager.gd"
 RoomRegistry="*res://Autoload/RoomRegistry.gd"
+GameClock="*res://Scripts/GameClock.gd"
 
 [display]
 
