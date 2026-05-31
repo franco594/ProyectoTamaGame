@@ -28,7 +28,6 @@ enum State { IDLE, WALK, INTERACT, TRAVEL }
 var _state: State = State.IDLE
 
 # ================== NECESIDADES ==================
-# [FIX] Declaradas vacías, se inicializan en _ready()
 var needs: Dictionary = {}
 var need_decay: Dictionary = {}
 var need_weight: Dictionary = {}
@@ -49,9 +48,15 @@ const VISITED_HISTORY_SIZE: int = 8
 var _last_wander_cell: Vector2i = Vector2i.ZERO
 
 # ================== FUMAR ==================
-# [FIX] randf_range fuera de una función no es confiable, se inicializa en _ready()
 var _smoke_timer: float = 0.0
 var _is_smoking: bool = false
+
+# ================== ESTADOS CRÍTICOS ==================
+const CRITICAL_THRESHOLD: float = 0.75
+var _critical_anim_timer: float = 0.0
+@export var critical_anim_every: float = 15.0
+@export var critical_frame_duration: float = 0.3
+var _playing_critical: bool = false
 
 # ================== FAILSAFE ==================
 var _stuck_timer: float = 0.0
@@ -63,9 +68,6 @@ const DIRS4: Array[Vector2i] = [
 
 # ================== READY ==================
 func _ready() -> void:
-	
-	
-	# [FIX] Inicializar necesidades aquí para que tengan valores reales
 	needs = {
 		"hunger": 0.20,
 		"energy": 0.10,
@@ -81,8 +83,8 @@ func _ready() -> void:
 		"energy": 0.9,
 		"fun":    0.7
 	}
-	# [FIX] randf_range solo funciona correctamente dentro de funciones
 	_smoke_timer = randf_range(15.0, 40.0)
+	_critical_anim_timer = critical_anim_every
 
 	_ensure_tile_refs()
 	_resolve_block_layers()
@@ -98,6 +100,7 @@ func _ready() -> void:
 	if anim != null:
 		_play_idle_anim()
 
+	print("[NPC] _ready completo. needs=", needs)
 	z_index = 2
 
 # ================== PROCESS ==================
@@ -139,6 +142,12 @@ func _process(delta: float) -> void:
 		if _smoke_timer <= 0.0:
 			_start_smoking()
 
+	if _state == State.IDLE and not _moving and not _is_smoking and not _playing_critical and not _wander_committed:
+		_critical_anim_timer -= delta
+		if _critical_anim_timer <= 0.0:
+			_critical_anim_timer = critical_anim_every
+			_try_play_critical_anim()
+
 	if _state == State.WALK and not _moving:
 		_stuck_timer += delta
 		if _stuck_timer > 5.0:
@@ -161,6 +170,7 @@ func _start_smoking() -> void:
 		_play_anim_safe(smoke_anim)
 	else:
 		_play_anim_safe("smoke")
+	print("[NPC] fumando...")
 	await get_tree().create_timer(randf_range(4.0, 8.0)).timeout
 	_stop_smoking()
 
@@ -168,6 +178,61 @@ func _stop_smoking() -> void:
 	_is_smoking = false
 	_smoke_timer = randf_range(15.0, 40.0)
 	_wander_timer = randf_range(1.0, 3.0)
+	print("[NPC] terminó de fumar")
+	_play_idle_anim()
+
+# ================== ESTADOS CRÍTICOS ==================
+func _try_play_critical_anim() -> void:
+	var critical: Array[String] = []
+	if needs.get("hunger", 1.0) < CRITICAL_THRESHOLD:
+		critical.append("hunger")
+	if needs.get("energy", 1.0) < CRITICAL_THRESHOLD:
+		critical.append("energy")
+	if needs.get("fun", 1.0) < CRITICAL_THRESHOLD:
+		critical.append("fun")
+
+	if critical.is_empty():
+		print("[NPC] chequeo crítico: ninguna necesidad bajo 25%, omitiendo")
+		return
+
+	print("[NPC] estados críticos activos: ", critical, " | needs=", needs)
+
+	var prev_dir: String = _last_dir
+	_last_dir = "SW"
+	_playing_critical = true
+	_wander_timer = 999.0
+
+	var frames_each: int = 6 / critical.size()
+	print("[NPC] frames por animación: ", frames_each, " duración por frame: ", critical_frame_duration, "s")
+
+	for need_name in critical:
+		var anim_name: String = ""
+		match need_name:
+			"hunger": anim_name = "hungry_SW"
+			"energy": anim_name = "tired_SW"
+			"fun":    anim_name = "bored_SW"
+
+		var sp: SpriteFrames = anim.sprite_frames
+		if sp == null or not sp.has_animation(anim_name):
+			print("[NPC] animación no encontrada: '", anim_name, "' — verificá el nombre en el AnimatedSprite2D")
+			continue
+
+		print("[NPC] reproduciendo '", anim_name, "' — ", frames_each, " frames x ", critical_frame_duration, "s = ", frames_each * critical_frame_duration, "s total")
+		anim.play(anim_name)
+		anim.frame = 0
+		anim.pause()
+
+		for _f in range(frames_each):
+			await get_tree().create_timer(critical_frame_duration).timeout
+			if anim.frame < sp.get_frame_count(anim_name) - 1:
+				anim.frame += 1
+
+		print("[NPC] terminó '", anim_name, "'")
+
+	_playing_critical = false
+	_last_dir = prev_dir
+	_wander_timer = randf_range(1.0, 2.0)
+	print("[NPC] animación crítica completa, volviendo a idle")
 	_play_idle_anim()
 
 # ================== WANDER ==================
@@ -335,8 +400,11 @@ func _cross_door(door) -> void:
 	_moving = false
 	_wander_committed = false
 	_is_smoking = false
+	_playing_critical = false
 	_state = State.TRAVEL
 	velocity = Vector2.ZERO
+
+	print("[NPC] cruzando puerta → ", door.target_room_id)
 
 	var fade_out: Tween = create_tween()
 	fade_out.tween_property(self, "modulate:a", 0.0, 0.4)
@@ -354,6 +422,7 @@ func _cross_door(door) -> void:
 	fade_in.tween_property(self, "modulate:a", 1.0, 0.4)
 	await fade_in.finished
 
+	print("[NPC] llegó a habitación: ", current_room_id)
 	_wander_timer = randf_range(1.0, 2.0)
 
 # ================== NECESIDADES ==================
@@ -383,7 +452,7 @@ func _try_decide_activity() -> void:
 		if best_score < 0.4:
 			return
 
-	if _is_smoking:
+	if _is_smoking or _playing_critical:
 		return
 
 	if _state == State.TRAVEL:
@@ -394,9 +463,19 @@ func _try_decide_activity() -> void:
 		if best_score < current_score + 0.15:
 			return
 
-	_wander_committed = false
+	# [FIX] Intentar llegar a la actividad y poner en cooldown si no hay path
 	_target_activity = best_ap
+	_wander_committed = false
 	go_to_cell(best_ap.entry_cell)
+
+	if _path_cells.is_empty() and _state != State.WALK:
+		print("[NPC] no se puede llegar a '", _get_activity_id(best_ap), "', cooldown 30s")
+		var act_id: String = _get_activity_id(best_ap)
+		_activity_cooldowns[act_id] = 30.0
+		_target_activity = null
+		return
+
+	print("[NPC] decidió actividad: ", _get_activity_id(best_ap), " score=", best_score)
 	_state = State.WALK
 
 func _score_activity(ap) -> float:
@@ -414,10 +493,12 @@ func _score_activity(ap) -> float:
 func _apply_activity_effect(ap) -> void:
 	for k: String in ap.need_effect.keys():
 		needs[k] = clamp(needs.get(k, 0.0) + float(ap.need_effect[k]), 0.0, 1.0)
+	print("[NPC] actividad completada. needs=", needs)
 
 func _start_interact(ap) -> void:
 	_state = State.INTERACT
 	_interact_timer = ap.duration
+	print("[NPC] interactuando con: ", _get_activity_id(ap), " duración=", ap.duration)
 	_play_idle_anim()
 
 func _get_activity_id(ap) -> String:
