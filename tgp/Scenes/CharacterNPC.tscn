@@ -1,4 +1,4 @@
-[gd_scene load_steps=126 format=3 uid="uid://cwbp4rrjua33k"]
+[gd_scene load_steps=128 format=3 uid="uid://cwbp4rrjua33k"]
 
 [ext_resource type="Script" uid="uid://beuto5n1frgnt" path="res://Scripts/character_npc.gd" id="1_luumf"]
 [ext_resource type="Texture2D" uid="uid://flwq66lfdda0" path="res://Resources/Personaje - Interfaz/TileSetMimiSprite.png" id="1_s2kpd"]
@@ -300,6 +300,14 @@ region = Rect2(64, 0, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_5xgkc"]
 atlas = ExtResource("3_w72ig")
 region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ib6mt"]
+atlas = ExtResource("3_w72ig")
+region = Rect2(480, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_62ddj"]
+atlas = ExtResource("3_w72ig")
+region = Rect2(480, 64, 96, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nfxa2"]
 atlas = ExtResource("3_w72ig")
@@ -1089,6 +1097,23 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_ib6mt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ib6mt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_62ddj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_62ddj")
+}],
+"loop": true,
+"name": &"sleep",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_nfxa2")
 }, {
 "duration": 1.0,
@@ -1416,9 +1441,8 @@ critical_frame_duration = 0.6
 y_sort_enabled = true
 position = Vector2(-16, -63)
 sprite_frames = SubResource("SpriteFrames_yswcl")
-animation = &"drinking_SE"
-frame = 5
-frame_progress = 0.292519
+animation = &"sleep"
+frame_progress = 0.505264
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
