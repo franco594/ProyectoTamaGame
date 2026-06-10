@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=4 uid="uid://cs83f6yew7s0e"]
+[gd_scene load_steps=23 format=4 uid="uid://cs83f6yew7s0e"]
 
 [ext_resource type="Script" uid="uid://bvyh3td0hv7o6" path="res://Scenes/Mapa/mapa_balcon_prueba.gd" id="1_ucvjw"]
 [ext_resource type="Texture2D" uid="uid://dga547of087h6" path="res://Resources/Casa - Objetos/TileSetCasa.png" id="1_w6fy0"]
@@ -9,7 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://iy6jrota8k7j" path="res://Resources/Casa - Objetos/TileSetObjects6tile.png" id="6_xcis5"]
 [ext_resource type="Script" uid="uid://f8cbmhqktpa3" path="res://Scripts/DoorToScene.gd" id="8_pp238"]
 [ext_resource type="PackedScene" uid="uid://cd5brqxmccilg" path="res://HUD/HUD.tscn" id="11_j5l68"]
-[ext_resource type="Script" uid="uid://x852fudfnlgh" path="res://Scripts/debug_grid.gd" id="12_axh4o"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_y0qgq"]
 texture = ExtResource("1_w6fy0")
@@ -233,27 +232,27 @@ texture = ExtResource("2_mtaff")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 0:0/0/texture_origin = Vector2i(0, 4)
-0:0/0/z_index = 6
+0:0/0/z_index = 3
 0:0/0/custom_data_0 = true
 1:0/0 = 0
 1:0/0/texture_origin = Vector2i(0, 4)
-1:0/0/z_index = 6
+1:0/0/z_index = 3
 1:0/0/custom_data_0 = true
 2:0/0 = 0
 2:0/0/texture_origin = Vector2i(0, 4)
-2:0/0/z_index = 6
+2:0/0/z_index = 3
 2:0/0/custom_data_0 = true
 3:0/0 = 0
 3:0/0/texture_origin = Vector2i(0, 4)
-3:0/0/z_index = 6
+3:0/0/z_index = 3
 3:0/0/custom_data_0 = true
 4:0/0 = 0
 4:0/0/texture_origin = Vector2i(0, 4)
-4:0/0/z_index = 6
+4:0/0/z_index = 3
 4:0/0/custom_data_0 = true
 5:0/0 = 0
 5:0/0/texture_origin = Vector2i(0, 4)
-5:0/0/z_index = 6
+5:0/0/z_index = 3
 5:0/0/custom_data_0 = true
 6:0/0 = 0
 6:0/0/texture_origin = Vector2i(0, 4)
@@ -483,12 +482,6 @@ y_sort_enabled = true
 tile_map_data = PackedByteArray("AAAGAAMAAAADAAAAAAA=")
 tile_set = SubResource("TileSet_g277f")
 
-[node name="Maceta2" type="TileMapLayer" parent="."]
-z_index = -4
-y_sort_enabled = true
-tile_map_data = PackedByteArray("AAAIAAIAAAAEAAEAAAA=")
-tile_set = SubResource("TileSet_g277f")
-
 [node name="Maceta3" type="TileMapLayer" parent="."]
 z_index = -4
 y_sort_enabled = true
@@ -496,7 +489,6 @@ tile_map_data = PackedByteArray("AAAGAAEAAAACAAAAAAA=")
 tile_set = SubResource("TileSet_g277f")
 
 [node name="Maceta4" type="TileMapLayer" parent="."]
-z_index = -4
 y_sort_enabled = true
 tile_map_data = PackedByteArray("AAAJAAAAAAAFAAAAAAA=")
 tile_set = SubResource("TileSet_g277f")
@@ -517,7 +509,7 @@ script = ExtResource("8_pp238")
 target_room_id = "recreativo"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene"]
-position = Vector2(87, 90)
+position = Vector2(87, 85)
 shape = SubResource("CircleShape2D_ucvjw")
 
 [node name="DoorToScene2" type="Area2D" parent="."]
@@ -526,7 +518,7 @@ script = ExtResource("8_pp238")
 target_room_id = "cocina"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene2"]
-position = Vector2(149, 84)
+position = Vector2(150, 84)
 shape = SubResource("CircleShape2D_ucvjw")
 
 [node name="CanvasLayer" parent="." instance=ExtResource("11_j5l68")]
@@ -537,10 +529,4 @@ bar_fun_path = NodePath("")
 lbl_state_path = NodePath("")
 lbl_clock_path = NodePath("")
 lbl_day_path = NodePath("")
-lbl_season_path = NodePath("")
 day_buttons = Array[NodePath]([])
-
-[node name="DegbugGrid" type="Node2D" parent="."]
-script = ExtResource("12_axh4o")
-floor_node = NodePath("../Piso")
-block_layers = Array[NodePath]([NodePath("../Pared"), NodePath("../Cama")])

@@ -15,24 +15,28 @@ var _lbl_state: Label
 var _printed_once: bool = false
 
 # ================== RELOJ — paths desde Inspector ==================
-@export var lbl_clock_path: NodePath       # Label reloj digital "08:00"
-@export var lbl_day_path: NodePath         # Label "Día 1"
-@export var lbl_weekday_path: NodePath     # Label "Lunes"
-@export var lbl_season_path: NodePath      # Label "Otoño"
-@export var lbl_year_path: NodePath        # Label "Año 1"
-@export var lbl_holiday_path: NodePath     # Label festivo (se oculta si no hay)
-@export var day_buttons: Array[NodePath] = []  # 7 botones Lunes→Domingo
+@export var lbl_clock_path: NodePath
+@export var lbl_day_path: NodePath
+@export var lbl_weekday_path: NodePath
+@export var texture_season_path: NodePath   # TextureRect, no Label
+@export var lbl_year_path: NodePath
+@export var lbl_holiday_path: NodePath
+@export var day_buttons: Array[NodePath] = []
 
 var _lbl_clock: Label
 var _lbl_day: Label
 var _lbl_weekday: Label
-var _lbl_season: Label
+var _texture_season: TextureRect            # TextureRect, no Label
 var _lbl_year: Label
 var _lbl_holiday: Label
 var _day_buttons: Array[Button] = []
 
 # ================== READY ==================
 func _ready() -> void:
+	# [FIX] Esperar dos frames para que el NPC termine su _ready()
+	await get_tree().process_frame
+	await get_tree().process_frame
+
 	# --- Barras de necesidades ---
 	_bar_hunger = get_node_or_null(bar_hunger_path) as ProgressBar
 	_bar_energy = get_node_or_null(bar_energy_path) as ProgressBar
@@ -57,12 +61,12 @@ func _ready() -> void:
 		_lbl_state.text = "State: (sin NPC)"
 
 	# --- Reloj ---
-	_lbl_clock   = get_node_or_null(lbl_clock_path)   as Label
-	_lbl_day     = get_node_or_null(lbl_day_path)      as Label
-	_lbl_weekday = get_node_or_null(lbl_weekday_path)  as Label
-	_lbl_season  = get_node_or_null(lbl_season_path)   as Label
-	_lbl_year    = get_node_or_null(lbl_year_path)     as Label
-	_lbl_holiday = get_node_or_null(lbl_holiday_path)  as Label
+	_lbl_clock      = get_node_or_null(lbl_clock_path)      as Label
+	_lbl_day        = get_node_or_null(lbl_day_path)         as Label
+	_lbl_weekday    = get_node_or_null(lbl_weekday_path)     as Label
+	_texture_season = get_node_or_null(texture_season_path)  as TextureRect
+	_lbl_year       = get_node_or_null(lbl_year_path)        as Label
+	_lbl_holiday    = get_node_or_null(lbl_holiday_path)     as Label
 
 	for p in day_buttons:
 		var b: Button = get_node_or_null(p) as Button
@@ -84,7 +88,6 @@ func _ready() -> void:
 # ================== PROCESS ==================
 func _process(delta: float) -> void:
 	_update_all(delta)
-	# Actualizar reloj cada frame para mostrar minutos en tiempo real
 	if _lbl_clock != null:
 		var gc: Node = get_node_or_null("/root/GameClock")
 		if gc != null:
@@ -143,11 +146,14 @@ func _refresh_clock() -> void:
 	if gc == null:
 		return
 
-	if _lbl_clock   != null: _lbl_clock.text   = gc.get_time_string()
-	if _lbl_day     != null: _lbl_day.text      = "Día %d" % gc.current_day
-	if _lbl_weekday != null: _lbl_weekday.text  = gc.get_weekday()
-	if _lbl_season  != null: _lbl_season.text   = gc.get_season()
-	if _lbl_year    != null: _lbl_year.text      = "Año %d" % gc.current_year
+	if _lbl_clock   != null: _lbl_clock.text  = gc.get_time_string()
+	if _lbl_day     != null: _lbl_day.text     = "Día %d" % gc.current_day
+	if _lbl_weekday != null: _lbl_weekday.text = gc.get_weekday()
+	if _lbl_year    != null: _lbl_year.text    = "Año %d" % gc.current_year
+
+	# Textura de estación
+	if _texture_season != null:
+		_texture_season.texture = gc.get_season_texture()
 
 	_update_holiday()
 	_update_day_buttons()
@@ -173,7 +179,6 @@ func _update_day_buttons() -> void:
 		var btn: Button = _day_buttons[i]
 		if btn == null:
 			continue
-		# Solo mostrar el botón del día actual, ocultar los demás
 		btn.visible = (i == gc.current_weekday_index)
 
 # ================== SEÑALES DEL GAMECLOCK ==================
@@ -183,8 +188,12 @@ func _on_day_changed(day: int, weekday: String, _is_holiday: bool, _holiday_name
 	_update_holiday()
 	_update_day_buttons()
 
-func _on_month_changed(_month: int, season: String) -> void:
-	if _lbl_season != null: _lbl_season.text = season
+func _on_month_changed(_month: int, _season: String) -> void:
+	var gc: Node = get_node_or_null("/root/GameClock")
+	if gc == null:
+		return
+	if _texture_season != null:
+		_texture_season.texture = gc.get_season_texture()
 
 func _on_year_changed(year: int) -> void:
 	if _lbl_year != null: _lbl_year.text = "Año %d" % year

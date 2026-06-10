@@ -7,7 +7,6 @@
 
 [node name="CharacterBody2D" parent="." groups=["npc"] instance=ExtResource("1_yujuy")]
 top_level = true
-z_index = 2
 z_as_relative = false
 y_sort_enabled = true
 position = Vector2(158, 83)

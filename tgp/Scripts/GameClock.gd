@@ -10,8 +10,8 @@ signal month_changed(month: int, season: String)
 signal year_changed(year: int)
 
 # ================== CONFIGURACIÓN (Inspector) ==================
-@export var seconds_per_game_hour: float = 60.0   # 60s real = 1h de juego
-@export var start_hour: int = 8                     # hora inicial al arrancar
+@export var seconds_per_game_hour: float = 60.0
+@export var start_hour: int = 8
 @export var start_day: int = 1
 @export var start_month: int = 1
 @export var start_year: int = 2026
@@ -21,16 +21,23 @@ const DAYS_PER_MONTH: int = 28
 const MONTHS_PER_YEAR: int = 4
 const DAYS_PER_WEEK: int = 7
 
-const SEASONS: Array[String] = ["Otoño 🍂", "Invierno ⛄", "Primavera 🌻", "Verano ⛱️"]
+const SEASON_NAMES: Array[String] = ["Otoño", "Invierno", "Primavera", "Verano"]
+
+# Paths a las imágenes de estación
+const SEASON_TEXTURES: Array[String] = [
+	"res://Resources/Extras/Estacion 0.PNG",
+	"res://Resources/Extras/Estacion 1.PNG",
+	"res://Resources/Extras/Estacion 2.PNG",
+	"res://Resources/Extras/Estacion 3.PNG"
+]
+
 const WEEKDAYS: Array[String] = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
-# Días festivos por mes (día del mes → nombre del festivo)
-# Mes 1 = Otoño, Mes 2 = Invierno, Mes 3 = Primavera, Mes 4 = Verano
 const HOLIDAYS: Dictionary = {
-	1: { 7: "Fiesta de la Cerveza",    21: "Semana Santa"    },
-	2: { 5: "Mundial de Futbol",        20: "Vacaciones de Invierno"      },
-	3: { 6: "Día de la Primavera",     22: "Festival de Don Satur"      },
-	4: { 4: "Festival del Sol",          19: "Noche de las Estrellas"  },
+	1: { 7: "Festival de la Cosecha",   21: "Noche de las Sombras"   },
+	2: { 5: "Festival del Hielo",        20: "Baile de los Copos"     },
+	3: { 6: "Día del Florecimiento",     22: "Festival del Huevo"     },
+	4: { 4: "Festival del Sol",          19: "Noche de las Estrellas" },
 }
 
 # ================== ESTADO ==================
@@ -39,7 +46,7 @@ var current_minute: int = 0
 var current_day: int = 1
 var current_month: int = 1
 var current_year: int = 2026
-var current_weekday_index: int = 0   # 0 = Lunes
+var current_weekday_index: int = 0
 
 var _time_accumulator: float = 0.0
 var _seconds_per_minute: float = 0.0
@@ -52,7 +59,6 @@ func _ready() -> void:
 	current_month  = start_month
 	current_year   = start_year
 
-	# Calcular weekday inicial según día absoluto
 	var abs_day: int = (current_year - 1) * MONTHS_PER_YEAR * DAYS_PER_MONTH
 	abs_day += (current_month - 1) * DAYS_PER_MONTH + (current_day - 1)
 	current_weekday_index = abs_day % DAYS_PER_WEEK
@@ -97,7 +103,14 @@ func _advance_day() -> void:
 
 # ================== GETTERS ==================
 func get_season() -> String:
-	return SEASONS[current_month - 1]
+	return SEASON_NAMES[current_month - 1]
+
+func get_season_texture() -> Texture2D:
+	var path: String = SEASON_TEXTURES[current_month - 1]
+	var tex: Texture2D = load(path) as Texture2D
+	if tex == null:
+		push_warning("[GameClock] No se pudo cargar la textura: " + path)
+	return tex
 
 func get_weekday() -> String:
 	return WEEKDAYS[current_weekday_index]
@@ -115,6 +128,5 @@ func get_time_string() -> String:
 func get_date_string() -> String:
 	return "%s %d - %s Año %d" % [get_season(), current_day, get_weekday(), current_year]
 
-# Devuelve un float 0.0-1.0 representando el progreso del día (para iluminación, etc.)
 func get_day_progress() -> float:
 	return (float(current_hour) * 60.0 + float(current_minute)) / (24.0 * 60.0)

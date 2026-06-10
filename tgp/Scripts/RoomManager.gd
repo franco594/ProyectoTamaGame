@@ -2,7 +2,7 @@
 extends Node
 
 @export var fade_duration: float = 0.35
-@export var start_room_id: String = "dormitorio"
+@export var start_room_id: String = "cocina"
 
 var _room_paths: Dictionary = {}
 var _loaded_rooms: Dictionary = {}

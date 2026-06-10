@@ -1432,6 +1432,7 @@ animations = [{
 radius = 2.22018
 
 [node name="NPC" type="CharacterBody2D"]
+z_index = 2
 scale = Vector2(1, 0.988123)
 motion_mode = 1
 script = ExtResource("1_luumf")
@@ -1441,8 +1442,7 @@ critical_frame_duration = 0.6
 y_sort_enabled = true
 position = Vector2(-16, -63)
 sprite_frames = SubResource("SpriteFrames_yswcl")
-animation = &"sleep"
-frame_progress = 0.505264
+animation = &"idle_SE"
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

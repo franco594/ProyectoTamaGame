@@ -473,7 +473,13 @@ tile_map_data = PackedByteArray("AAABAAAAAAACAAEAAQABAP//AAACAAEAAAABAP7/AAACAAE
 tile_set = SubResource("TileSet_s2skx")
 
 [node name="Paredes" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAABAPv/AAAEAAAAAAAFAPv/AAAIAAAAABAFAAEAAAAKAAIAABABAPz/AAAcAAAAAAABAP3/AAAcAAAAAAABAP7/AAAcAAAAAAABAP//AAAcAAAAAAABAAAAAAAcAAAAAAACAPv/AAAcAAAAABADAPv/AAAcAAAAABAEAPv/AAAcAAAAABAGAPv/AAAcAAAAABA=")
+visible = false
+tile_map_data = PackedByteArray("AAABAPv/AAAEAAAAAAAFAPv/AAAIAAAAABABAPz/AAAcAAAAAAABAP3/AAAcAAAAAAABAP7/AAAcAAAAAAABAP//AAAcAAAAAAABAAAAAAAcAAAAAAACAPv/AAAcAAAAABADAPv/AAAcAAAAABAEAPv/AAAcAAAAABAGAPv/AAAcAAAAABA=")
+tile_set = SubResource("TileSet_uoubr")
+
+[node name="Puertas" type="TileMapLayer" parent="."]
+modulate = Color(1, 1, 1, 0.294118)
+tile_map_data = PackedByteArray("AAAFAAEAAAAKAAIAABA=")
 tile_set = SubResource("TileSet_uoubr")
 
 [node name="Objetos" type="TileMapLayer" parent="."]
