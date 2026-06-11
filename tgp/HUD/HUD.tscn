@@ -187,9 +187,9 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 0
 offset_left = 833.0
 offset_top = 11.0
-offset_right = 933.0
-offset_bottom = 36.0
-scale = Vector2(0.995984, 1.31813)
+offset_right = 963.0
+offset_bottom = 31.0
+scale = Vector2(1.27598, 1.35813)
 theme = SubResource("Theme_k5de2")
 theme_override_constants/separation = 12
 
