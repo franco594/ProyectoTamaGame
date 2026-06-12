@@ -31,7 +31,7 @@ const SEASON_TEXTURES: Array[String] = [
 	"res://Resources/Extras/Estacion 3.PNG"
 ]
 
-const WEEKDAYS: Array[String] = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+const WEEKDAYS: Array[String] = ["LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB", "DOM"]
 
 const HOLIDAYS: Dictionary = {
 	1: { 7: "Festival de la Cosecha",   21: "Noche de las Sombras"   },

@@ -465,6 +465,7 @@ sources/4 = SubResource("TileSetAtlasSource_v10c1")
 radius = 5.38516
 
 [node name="Entrada" type="TileMapLayer"]
+position = Vector2(0, 49)
 tile_set = SubResource("TileSet_wwmh0")
 script = ExtResource("1_rloii")
 
@@ -473,7 +474,6 @@ tile_map_data = PackedByteArray("AAABAAAAAAACAAEAAQABAP//AAACAAEAAAABAP7/AAACAAE
 tile_set = SubResource("TileSet_s2skx")
 
 [node name="Paredes" type="TileMapLayer" parent="."]
-visible = false
 tile_map_data = PackedByteArray("AAABAPv/AAAEAAAAAAAFAPv/AAAIAAAAABABAPz/AAAcAAAAAAABAP3/AAAcAAAAAAABAP7/AAAcAAAAAAABAP//AAAcAAAAAAABAAAAAAAcAAAAAAACAPv/AAAcAAAAABADAPv/AAAcAAAAABAEAPv/AAAcAAAAABAGAPv/AAAcAAAAABA=")
 tile_set = SubResource("TileSet_uoubr")
 
@@ -498,5 +498,5 @@ script = ExtResource("7_6t6tk")
 target_room_id = "comedor"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene2"]
-position = Vector2(198, 71)
+position = Vector2(189, 114)
 shape = SubResource("CircleShape2D_rloii")

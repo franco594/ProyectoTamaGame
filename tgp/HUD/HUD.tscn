@@ -1,8 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://cd5brqxmccilg"]
+[gd_scene load_steps=19 format=3 uid="uid://cd5brqxmccilg"]
 
 [ext_resource type="Script" uid="uid://c6bh4lfj22lb0" path="res://HUD/HUD.gd" id="1_ja1d4"]
 [ext_resource type="Texture2D" uid="uid://dbyoe1wb04x4e" path="res://Resources/Personaje - Interfaz/Profile_Pictures/Mimi (Mimo) 0.PNG" id="2_ja1d4"]
-[ext_resource type="Texture2D" uid="uid://rv17heos08e7" path="res://Resources/Telefono/Telefono-Icon.PNG" id="3_aa5tu"]
+[ext_resource type="Texture2D" uid="uid://x6u1x4cawo2p" path="res://Resources/Casa - Objetos/TileSetAnimacionObjects.png" id="3_aa5tu"]
 [ext_resource type="Texture2D" uid="uid://dbds3t3its8mx" path="res://Resources/Extras/CalendarSmall.png" id="4_aa5tu"]
 [ext_resource type="FontFile" uid="uid://dm18uc17xr8jc" path="res://Resources/Fonts/DS-DIGIT.TTF" id="5_njmlf"]
 
@@ -33,6 +33,68 @@ cache/0/16/0/underline_position = 0.0
 cache/0/16/0/underline_thickness = 0.0
 cache/0/16/0/scale = 1.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_aa5tu"]
+atlas = ExtResource("3_aa5tu")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_njmlf"]
+atlas = ExtResource("3_aa5tu")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lkt0t"]
+atlas = ExtResource("3_aa5tu")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6i5cd"]
+atlas = ExtResource("3_aa5tu")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t1yhm"]
+atlas = ExtResource("3_aa5tu")
+region = Rect2(96, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pd2p5"]
+atlas = ExtResource("3_aa5tu")
+region = Rect2(128, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fwgky"]
+atlas = ExtResource("3_aa5tu")
+region = Rect2(160, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7odlb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aa5tu")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_njmlf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lkt0t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6i5cd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t1yhm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pd2p5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fwgky")
+}],
+"loop": true,
+"name": &"pulse",
+"speed": 6.0
+}]
+
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_ja1d4")
 bar_hunger_path = NodePath("Control/MarginContainer/Panel/Bars/HBoxContainer/BarHungerr")
@@ -40,8 +102,11 @@ bar_energy_path = NodePath("Control/MarginContainer/Panel/Bars/HBoxContainer2/Ba
 bar_fun_path = NodePath("Control/MarginContainer/Panel/Bars/HBoxContainer3/BarFun")
 lbl_state_path = NodePath("Control/MarginContainer/Panel/Bars/LblState")
 lbl_clock_path = NodePath("Control/MarginContainer/Panel/HBoxContainer3/LblTime")
+lbl_day_path = NodePath("Control/MarginContainer/Panel/HBoxContainer2/Almanaque/LblDay")
+lbl_number_path = NodePath("Control/MarginContainer/Panel/HBoxContainer2/Almanaque/LblNumber")
 texture_season_path = NodePath("Control/MarginContainer/Panel/VBoxContainer3/LblSeason")
 day_buttons = Array[NodePath]([NodePath(""), NodePath(""), NodePath(""), NodePath(""), NodePath(""), NodePath(""), NodePath("")])
+telephone_path = NodePath("Control/MarginContainer/Panel/HBoxContainer2/Telephone")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -145,16 +210,17 @@ text = "\"State:   -\""
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Control/MarginContainer/Panel"]
 layout_mode = 0
-offset_left = 971.0
-offset_top = 9.0
-offset_right = 1040.0
-offset_bottom = 60.0
+offset_left = 999.0
+offset_top = 5.0
+offset_right = 1068.0
+offset_bottom = 56.0
 scale = Vector2(2.12036, 2.13019)
 alignment = 1
 
-[node name="TextureButton4" type="TextureButton" parent="Control/MarginContainer/Panel/HBoxContainer2"]
-layout_mode = 2
-texture_normal = ExtResource("3_aa5tu")
+[node name="Telephone" type="AnimatedSprite2D" parent="Control/MarginContainer/Panel/HBoxContainer2"]
+position = Vector2(0.943237, 15.961)
+sprite_frames = SubResource("SpriteFrames_7odlb")
+animation = &"idle"
 
 [node name="Almanaque" type="TextureRect" parent="Control/MarginContainer/Panel/HBoxContainer2"]
 layout_mode = 2
@@ -169,27 +235,29 @@ offset_bottom = 24.4083
 scale = Vector2(0.772539, 0.682245)
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "DOM"
+horizontal_alignment = 1
 uppercase = true
 
 [node name="LblNumber" type="Label" parent="Control/MarginContainer/Panel/HBoxContainer2/Almanaque"]
 layout_mode = 0
-offset_left = 2.2971
+offset_left = -1.00423
 offset_top = 15.961
-offset_right = 42.2971
+offset_right = 38.9958
 offset_bottom = 54.961
 scale = Vector2(1, 0.849779)
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 28
 text = "11"
+horizontal_alignment = 1
 
 [node name="VBoxContainer3" type="HBoxContainer" parent="Control/MarginContainer/Panel"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 0
 offset_left = 833.0
-offset_top = 11.0
-offset_right = 963.0
-offset_bottom = 31.0
-scale = Vector2(1.27598, 1.35813)
+offset_top = 9.0
+offset_right = 933.0
+offset_bottom = 29.0
+scale = Vector2(1.51598, 1.35813)
 theme = SubResource("Theme_k5de2")
 theme_override_constants/separation = 12
 

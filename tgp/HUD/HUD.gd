@@ -16,24 +16,30 @@ var _printed_once: bool = false
 
 # ================== RELOJ — paths desde Inspector ==================
 @export var lbl_clock_path: NodePath
-@export var lbl_day_path: NodePath
-@export var lbl_weekday_path: NodePath
-@export var texture_season_path: NodePath   # TextureRect, no Label
+@export var lbl_day_path: NodePath      # → LblDay    (nombre del día: "Lunes")
+@export var lbl_number_path: NodePath   # → LblNumber (número del día: "1")
+@export var texture_season_path: NodePath
 @export var lbl_year_path: NodePath
 @export var lbl_holiday_path: NodePath
 @export var day_buttons: Array[NodePath] = []
 
 var _lbl_clock: Label
-var _lbl_day: Label
-var _lbl_weekday: Label
-var _texture_season: TextureRect            # TextureRect, no Label
+var _lbl_day: Label      # muestra el nombre del día "Lunes"
+var _lbl_number: Label   # muestra el número del día "1"
+var _texture_season: TextureRect
 var _lbl_year: Label
 var _lbl_holiday: Label
 var _day_buttons: Array[Button] = []
 
+# ================== TELÉFONO / NOTIFICACIONES ==================
+@export var telephone_path: NodePath
+
+var _telephone: AnimatedSprite2D
+var _notification_queue: Array[String] = []
+var _has_notification: bool = false
+
 # ================== READY ==================
 func _ready() -> void:
-	# [FIX] Esperar dos frames para que el NPC termine su _ready()
 	await get_tree().process_frame
 	await get_tree().process_frame
 
@@ -44,7 +50,7 @@ func _ready() -> void:
 	_lbl_state  = get_node_or_null(lbl_state_path)  as Label
 
 	if _bar_hunger == null or _bar_energy == null or _bar_fun == null or _lbl_state == null:
-		push_error("[HUD] Alguna barra o label de necesidades es null. Revisá los paths en el Inspector.")
+		push_error("[HUD] Alguna barra o label de necesidades es null.")
 	else:
 		_bar_hunger.min_value = 0.0; _bar_hunger.max_value = 100.0
 		_bar_energy.min_value = 0.0; _bar_energy.max_value = 100.0
@@ -61,29 +67,50 @@ func _ready() -> void:
 		_lbl_state.text = "State: (sin NPC)"
 
 	# --- Reloj ---
-	_lbl_clock      = get_node_or_null(lbl_clock_path)      as Label
-	_lbl_day        = get_node_or_null(lbl_day_path)         as Label
-	_lbl_weekday    = get_node_or_null(lbl_weekday_path)     as Label
-	_texture_season = get_node_or_null(texture_season_path)  as TextureRect
-	_lbl_year       = get_node_or_null(lbl_year_path)        as Label
-	_lbl_holiday    = get_node_or_null(lbl_holiday_path)     as Label
+	_lbl_clock      = get_node_or_null(lbl_clock_path)     as Label
+	_lbl_day        = get_node_or_null(lbl_day_path)        as Label
+	_lbl_number     = get_node_or_null(lbl_number_path)     as Label
+	_texture_season = get_node_or_null(texture_season_path) as TextureRect
+	_lbl_year       = get_node_or_null(lbl_year_path)       as Label
+	_lbl_holiday    = get_node_or_null(lbl_holiday_path)    as Label
 
 	for p in day_buttons:
 		var b: Button = get_node_or_null(p) as Button
 		if b != null:
 			_day_buttons.append(b)
 
-	# Conectar señales del GameClock
+	# --- Teléfono ---
+	_telephone = get_node_or_null(telephone_path) as AnimatedSprite2D
+	if _telephone != null:
+		_telephone.visible = true
+		_telephone.play("idle")
+		_telephone.set_process_input(true)
+		print("[HUD] Telephone listo")
+	else:
+		push_warning("[HUD] No se encontró Telephone. Asigná telephone_path en el Inspector.")
+
+	# --- Señales del GameClock ---
 	var gc: Node = get_node_or_null("/root/GameClock")
 	if gc != null:
 		gc.day_changed.connect(_on_day_changed)
 		gc.month_changed.connect(_on_month_changed)
 		gc.year_changed.connect(_on_year_changed)
 	else:
-		push_warning("[HUD] GameClock no encontrado. Agregalo como Autoload.")
+		push_warning("[HUD] GameClock no encontrado.")
 
 	_update_all(0.0)
 	_refresh_clock()
+
+	# --- Timer de prueba ---
+	await get_tree().create_timer(2.0).timeout
+	push_notification("🔔 Notificación de prueba")
+
+	var timer := Timer.new()
+	add_child(timer)
+	timer.wait_time = 60.0
+	timer.autostart = false
+	timer.timeout.connect(func(): push_notification("🔔 Notificación de prueba"))
+	timer.start()
 
 # ================== PROCESS ==================
 func _process(delta: float) -> void:
@@ -93,11 +120,70 @@ func _process(delta: float) -> void:
 		if gc != null:
 			_lbl_clock.text = gc.get_time_string()
 
+# ================== INPUT ==================
+func _input(event: InputEvent) -> void:
+	if not _has_notification:
+		return
+	if _telephone == null:
+		return
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		if _is_click_on_telephone(event.position):
+			_dismiss_notification()
+
+func _is_click_on_telephone(click_pos: Vector2) -> bool:
+	if _telephone == null:
+		return false
+	var local_pos: Vector2 = _telephone.to_local(click_pos)
+	var frames: SpriteFrames = _telephone.sprite_frames
+	if frames == null:
+		return false
+	var tex: Texture2D = frames.get_frame_texture(_telephone.animation, 0)
+	if tex == null:
+		return false
+	var half_w: float = tex.get_width()  * _telephone.scale.x / 2.0
+	var half_h: float = tex.get_height() * _telephone.scale.y / 2.0
+	return abs(local_pos.x) < half_w and abs(local_pos.y) < half_h
+
+# ================== NOTIFICACIONES ==================
+func push_notification(message: String) -> void:
+	_notification_queue.append(message)
+	print("[HUD] notificación en cola: '", message, "' | total: ", _notification_queue.size())
+	if not _has_notification:
+		_show_next_notification()
+
+func _show_next_notification() -> void:
+	if _notification_queue.is_empty():
+		return
+	var msg: String = _notification_queue[0]
+	_has_notification = true
+	print("[HUD] mostrando: '", msg, "'")
+	if _telephone != null:
+		if _telephone.sprite_frames != null and _telephone.sprite_frames.has_animation("pulse"):
+			_telephone.play("pulse")
+		else:
+			push_warning("[HUD] Telephone no tiene animación 'pulse'.")
+
+func _dismiss_notification() -> void:
+	if _notification_queue.is_empty():
+		return
+	var dismissed: String = _notification_queue[0]
+	_notification_queue.remove_at(0)
+	print("[HUD] descartada: '", dismissed, "' | quedan: ", _notification_queue.size())
+	if _notification_queue.is_empty():
+		_has_notification = false
+		if _telephone != null:
+			_telephone.stop()
+			if _telephone.sprite_frames != null and _telephone.sprite_frames.has_animation("idle"):
+				_telephone.play("idle")
+			else:
+				push_warning("[HUD] Telephone no tiene animación 'idle'.")
+	else:
+		_show_next_notification()
+
 # ================== NECESIDADES ==================
-func _update_all(delta: float) -> void:
+func _update_all(_delta: float) -> void:
 	if _bar_hunger == null or _bar_energy == null or _bar_fun == null or _lbl_state == null:
 		return
-
 	if _npc == null:
 		_lbl_state.text = "State: (sin NPC)"
 		_set_bar(_bar_hunger, 0.0)
@@ -105,7 +191,7 @@ func _update_all(delta: float) -> void:
 		_set_bar(_bar_fun,    0.0)
 		if not _printed_once:
 			_printed_once = true
-			push_warning("[HUD] No encontré NPC. Ponelo en el grupo 'npc' o asigná npc_path.")
+			push_warning("[HUD] No encontré NPC.")
 		return
 
 	var needs_dict: Dictionary = {}
@@ -145,16 +231,12 @@ func _refresh_clock() -> void:
 	var gc: Node = get_node_or_null("/root/GameClock")
 	if gc == null:
 		return
-
-	if _lbl_clock   != null: _lbl_clock.text  = gc.get_time_string()
-	if _lbl_day     != null: _lbl_day.text     = "Día %d" % gc.current_day
-	if _lbl_weekday != null: _lbl_weekday.text = gc.get_weekday()
-	if _lbl_year    != null: _lbl_year.text    = "Año %d" % gc.current_year
-
-	# Textura de estación
+	if _lbl_clock   != null: _lbl_clock.text   = gc.get_time_string()
+	if _lbl_day     != null: _lbl_day.text      = gc.get_weekday()
+	if _lbl_number  != null: _lbl_number.text   = str(gc.current_day)
+	if _lbl_year    != null: _lbl_year.text     = "Año %d" % gc.current_year
 	if _texture_season != null:
 		_texture_season.texture = gc.get_season_texture()
-
 	_update_holiday()
 	_update_day_buttons()
 
@@ -182,18 +264,22 @@ func _update_day_buttons() -> void:
 		btn.visible = (i == gc.current_weekday_index)
 
 # ================== SEÑALES DEL GAMECLOCK ==================
-func _on_day_changed(day: int, weekday: String, _is_holiday: bool, _holiday_name: String) -> void:
-	if _lbl_day     != null: _lbl_day.text     = "Día %d" % day
-	if _lbl_weekday != null: _lbl_weekday.text = weekday
+func _on_day_changed(day: int, weekday: String, is_holiday: bool, holiday_name: String) -> void:
+	if _lbl_day    != null: _lbl_day.text    = weekday
+	if _lbl_number != null: _lbl_number.text = str(day)
 	_update_holiday()
 	_update_day_buttons()
+	if is_holiday and holiday_name != "":
+		push_notification("🎉 " + holiday_name)
 
-func _on_month_changed(_month: int, _season: String) -> void:
+func _on_month_changed(_month: int, season: String) -> void:
 	var gc: Node = get_node_or_null("/root/GameClock")
 	if gc == null:
 		return
 	if _texture_season != null:
 		_texture_season.texture = gc.get_season_texture()
+	push_notification("Nueva estación: " + season)
 
 func _on_year_changed(year: int) -> void:
 	if _lbl_year != null: _lbl_year.text = "Año %d" % year
+	push_notification("¡Año nuevo! " + str(year))

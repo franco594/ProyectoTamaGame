@@ -319,6 +319,7 @@ sources/4 = SubResource("TileSetAtlasSource_jqyyr")
 radius = 5.38516
 
 [node name="Mundo" type="Node2D"]
+position = Vector2(0, -22)
 script = ExtResource("1_r8gfo")
 
 [node name="Piso" type="TileMapLayer" parent="."]
@@ -346,5 +347,5 @@ script = ExtResource("7_ifive")
 target_room_id = "cocina"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene"]
-position = Vector2(120, 60)
+position = Vector2(118, 39)
 shape = SubResource("CircleShape2D_r8gfo")

@@ -459,6 +459,7 @@ radius = 5.38516
 
 [node name="Balcon" type="Node2D"]
 y_sort_enabled = true
+position = Vector2(-18, -48)
 script = ExtResource("1_ucvjw")
 
 [node name="Pared" type="TileMapLayer" parent="."]
@@ -509,7 +510,7 @@ script = ExtResource("8_pp238")
 target_room_id = "recreativo"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene"]
-position = Vector2(87, 85)
+position = Vector2(69, 37)
 shape = SubResource("CircleShape2D_ucvjw")
 
 [node name="DoorToScene2" type="Area2D" parent="."]
@@ -518,7 +519,7 @@ script = ExtResource("8_pp238")
 target_room_id = "cocina"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorToScene2"]
-position = Vector2(150, 84)
+position = Vector2(130, 32)
 shape = SubResource("CircleShape2D_ucvjw")
 
 [node name="CanvasLayer" parent="." instance=ExtResource("11_j5l68")]
