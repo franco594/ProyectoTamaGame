@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cy16cjm5btcyo"
-path="res://.godot/imported/CalendarBig.png-3e41dc2d8565ab4544b88379badb5bed.ctex"
+uid="uid://ch73m2ycbp0x5"
+path="res://.godot/imported/TileSetItems.png-055f9eb84873439d46c7a1e8fbe48470.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Extras/CalendarBig.png"
-dest_files=["res://.godot/imported/CalendarBig.png-3e41dc2d8565ab4544b88379badb5bed.ctex"]
+source_file="res://Resources/Personaje - Interfaz/TileSetItems.png"
+dest_files=["res://.godot/imported/TileSetItems.png-055f9eb84873439d46c7a1e8fbe48470.ctex"]
 
 [params]
 
